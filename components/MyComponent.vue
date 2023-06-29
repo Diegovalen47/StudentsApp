@@ -1,5 +1,5 @@
 <template>
-  Hola mundo no necesito root element
+  Contador marica
   <span>{{ globalStore.count }}</span>
 </template>
 
@@ -8,4 +8,3 @@ import { useGlobalStore } from '@/store/index'
 
 const globalStore = useGlobalStore()
 </script>
-
