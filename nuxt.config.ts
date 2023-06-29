@@ -1,4 +1,8 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import vuetify from 'vite-plugin-vuetify'
+import { createResolver } from '@nuxt/kit'
+
+const { resolve } = createResolver(import.meta.url)
+
 export default defineNuxtConfig({
   devtools: { 
     enabled: true 
@@ -13,8 +17,13 @@ export default defineNuxtConfig({
     }
   },
   css: [
-    '@/assets/css/global.scss'
+    '@/assets/css/global.scss',
+    'vuetify/lib/styles/main.sass',
+    '@mdi/font/css/materialdesignicons.min.css'
   ],
+  build: {
+    transpile: ['vuetify'],
+  },
   modules: [
     '@pinia/nuxt',
   ],
@@ -24,5 +33,5 @@ export default defineNuxtConfig({
       'defineStore', // import { defineStore } from 'pinia'
       ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
     ],
-  },
+  }
 })

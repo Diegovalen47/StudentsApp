@@ -1,15 +1,23 @@
 <template>
-  <div class="test-class">
-    <HelloWorld />
-    <MyComponent />
-  </div>
-  <div>
-    <button
-      @click="globalStore.increment()"
-    >
-      Incrementar
-    </button>
-  </div>
+  <v-container>
+    <v-row class="test-class">
+      <v-col>
+        <HelloWorld />
+      </v-col>
+      <v-col>
+        <MyComponent />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-btn
+          @click="globalStore.increment()"
+        >
+          Incrementar
+        </v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts" setup>
