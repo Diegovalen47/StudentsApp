@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model PRUEBA {
+  Id    Int     @id
+  NAME  String  @db.VarChar(100)
+  email String? @db.VarChar(100)
+  notas nota[]
+}
+
+model nota {
+  id        Int     @id
+  prueba_id Int?
+  prueba    PRUEBA? @relation(fields: [prueba_id], references: [Id])
+
+  @@index([prueba_id])
+}

@@ -61,3 +61,23 @@ yarn preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+
+## Correr el proyecto en desarrollo
+
+```bash
+# pnpm
+pnpm run dev -o
+```
+
+## Prisma commands
+  
+```bash
+# Traer cambios (model) de base de datos del server
+npx prisma db pull
+# Subir cambios (model) a la base de datos del server
+npx prisma db push
+# Generar el Prisma Client
+npx prisma generate
+```
+

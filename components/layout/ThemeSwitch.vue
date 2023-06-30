@@ -4,8 +4,11 @@ import { useTheme } from "vuetify";
 const theme = useTheme()
 const modelValue = ref<boolean>(false)
 
-watch(modelValue, (newValue) => {
+watch(modelValue, async (newValue) => {
   theme.global.name.value = newValue ? 'DarkTheme' : 'LightTheme'
+  const { data } = await useFetch(`/api/pruebas/get`, {
+    method: 'GET',
+  })
 })
 
 </script>

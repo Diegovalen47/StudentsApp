@@ -27,13 +27,19 @@ dependencies:
 devDependencies:
   '@nuxt/devtools':
     specifier: latest
-    version: 0.6.4(nuxt@3.6.1)(vite@4.3.9)
+    version: 0.6.6(nuxt@3.6.1)(vite@4.3.9)
+  '@prisma/client':
+    specifier: ^4.16.2
+    version: 4.16.2(prisma@4.16.2)
   '@types/node':
     specifier: ^18
     version: 18.0.0
   nuxt:
     specifier: ^3.6.1
     version: 3.6.1(@types/node@18.0.0)(sass@1.63.6)
+  prisma:
+    specifier: ^4.16.2
+    version: 4.16.2
   sass:
     specifier: ^1.63.6
     version: 1.63.6
@@ -910,8 +916,8 @@ packages:
     resolution: {integrity: sha512-GBzP8zOc7CGWyFQS6dv1lQz8VVpz5C2yRszbXufwG/9zhStTIH50EtD87NmWbTMwXDvZLNg8GIpb1UFdH93JCA==}
     dev: true
 
-  /@nuxt/devtools-kit@0.6.4(nuxt@3.6.1)(vite@4.3.9):
-    resolution: {integrity: sha512-+NSTULmKIECVBzAmk2/LnzJnUv1hIzkRmtBSPwNTyaHe6KEU45eq32/4OdjlM/Nw4ucc2w7CSbATptcR7lnWVw==}
+  /@nuxt/devtools-kit@0.6.6(nuxt@3.6.1)(vite@4.3.9):
+    resolution: {integrity: sha512-6P00gcvbGQVEzHr+Xvpymqsbhg1rU64wQDRG0oLBXW/pcuJO/hyppowGr8Tvt3Xn6TRYJcgk1wkBa1wL9U+Z+g==}
     peerDependencies:
       nuxt: ^3.5.1
       vite: '*'
@@ -926,8 +932,8 @@ packages:
       - supports-color
     dev: true
 
-  /@nuxt/devtools-wizard@0.6.4:
-    resolution: {integrity: sha512-bWRs64ThCAPvBpKUi5adIiW1caBMQRL+A142P0cPYf1B4x9ie44VuydGlfdELrshdMiOT8xse+G6Uwoy8Yt03Q==}
+  /@nuxt/devtools-wizard@0.6.6:
+    resolution: {integrity: sha512-hzTVPaAd6PXyebk0bCjEwtdsXsoiSJnLCcZmlSLFmTNdVSmyb2tHNOuYTzZdobrl0iArjVIBaIqgFIWjYBQKNg==}
     hasBin: true
     dependencies:
       consola: 3.2.2
@@ -943,15 +949,15 @@ packages:
       semver: 7.5.3
     dev: true
 
-  /@nuxt/devtools@0.6.4(nuxt@3.6.1)(vite@4.3.9):
-    resolution: {integrity: sha512-Sn+yUMylI0ccpk0v2qfNCVmYMdduHrzLy6GyDZRDN/e0gxzAZqeHZfFD433KuND6cyvcvJ7GFVjlBz+6gYERWA==}
+  /@nuxt/devtools@0.6.6(nuxt@3.6.1)(vite@4.3.9):
+    resolution: {integrity: sha512-bYPKFbsHH6RQ9tXt15jwuw6UQqU4PMStEzO2VYxMrP+rw5tDOD4wdf8qoMVi17c3RrxjvL8TlS6roBSApndx3g==}
     hasBin: true
     peerDependencies:
       nuxt: ^3.5.1
       vite: '*'
     dependencies:
-      '@nuxt/devtools-kit': 0.6.4(nuxt@3.6.1)(vite@4.3.9)
-      '@nuxt/devtools-wizard': 0.6.4
+      '@nuxt/devtools-kit': 0.6.6(nuxt@3.6.1)(vite@4.3.9)
+      '@nuxt/devtools-wizard': 0.6.6
       '@nuxt/kit': 3.6.1
       birpc: 0.2.12
       boxen: 7.1.0
@@ -980,7 +986,7 @@ packages:
       sirv: 2.0.3
       unimport: 3.0.11(rollup@3.25.3)
       vite: 4.3.9(@types/node@18.0.0)(sass@1.63.6)
-      vite-plugin-inspect: 0.7.30(vite@4.3.9)
+      vite-plugin-inspect: 0.7.31(vite@4.3.9)
       vite-plugin-vue-inspector: 3.4.2(vite@4.3.9)
       wait-on: 7.0.1
       which: 3.0.1
@@ -1152,6 +1158,29 @@ packages:
 
   /@polka/url@1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
+    dev: true
+
+  /@prisma/client@4.16.2(prisma@4.16.2):
+    resolution: {integrity: sha512-qCoEyxv1ZrQ4bKy39GnylE8Zq31IRmm8bNhNbZx7bF2cU5aiCCnSa93J2imF88MBjn7J9eUQneNxUQVJdl/rPQ==}
+    engines: {node: '>=14.17'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+    dependencies:
+      '@prisma/engines-version': 4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81
+      prisma: 4.16.2
+    dev: true
+
+  /@prisma/engines-version@4.16.1-1.4bc8b6e1b66cb932731fb1bdbbc550d1e010de81:
+    resolution: {integrity: sha512-q617EUWfRIDTriWADZ4YiWRZXCa/WuhNgLTVd+HqWLffjMSPzyM5uOWoauX91wvQClSKZU4pzI4JJLQ9Kl62Qg==}
+    dev: true
+
+  /@prisma/engines@4.16.2:
+    resolution: {integrity: sha512-vx1nxVvN4QeT/cepQce68deh/Turxy5Mr+4L4zClFuK1GlxN3+ivxfuv+ej/gvidWn1cE1uAhW7ALLNlYbRUAw==}
+    requiresBuild: true
     dev: true
 
   /@rollup/plugin-alias@5.0.0(rollup@3.25.3):
@@ -5166,6 +5195,15 @@ packages:
     engines: {node: ^14.13.1 || >=16.0.0}
     dev: true
 
+  /prisma@4.16.2:
+    resolution: {integrity: sha512-SYCsBvDf0/7XSJyf2cHTLjLeTLVXYfqp7pG5eEVafFLeT0u/hLFz/9W196nDRGUOo1JfPatAEb+uEnTQImQC1g==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      '@prisma/engines': 4.16.2
+    dev: true
+
   /proc-log@3.0.0:
     resolution: {integrity: sha512-++Vn7NS4Xf9NacaU9Xq3URUuqZETPsf8L4j5/ckhaRYsfPeRyzGw+iDjFhV/Jr3uNmTvvddEJFWh5R1gRgUH8A==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
@@ -6213,8 +6251,8 @@ packages:
       vscode-uri: 3.0.7
     dev: true
 
-  /vite-plugin-inspect@0.7.30(vite@4.3.9):
-    resolution: {integrity: sha512-4z3bxULL9KGsSu2Gt+Z/lYQB2APpODG+2eHDGWK9NE4IGnwKfbz0lzJqVJGFtLGhvdwzGjt01aPgpMLYb/bibw==}
+  /vite-plugin-inspect@0.7.31(vite@4.3.9):
+    resolution: {integrity: sha512-wbe3/dJWaGIQPNL+wBIL6A4bNZ3F1uw4hXPrM475pRo71zaP9KKSMHdDupcKE9hQ6ZcjxlnVCP1atPsgWzFVtw==}
     engines: {node: '>=14'}
     peerDependencies:
       vite: ^3.1.0 || ^4.0.0
