@@ -1,25 +1,3 @@
-<template>
-  <v-container>
-    <v-row class="test-class">
-      <v-col>
-        <HelloWorld />
-      </v-col>
-      <v-col>
-        <MyComponent />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-btn
-          @click="incrementHandler()"
-        >
-          Incrementar {{ globalStore.doubleCount }}
-        </v-btn>
-      </v-col>
-    </v-row>
-  </v-container>
-</template>
-
 <script lang="ts" setup>
 import { useGlobalStore } from '@/store/index'
 import { useSwal } from '@/composables/useSwal'
@@ -40,8 +18,17 @@ function incrementHandler() {
     allowOutsideClick: false,
   })
 }
-
 </script>
+
+<template>
+  <v-container>
+    <v-row>
+      <v-col>
+        Hola
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
 
 <style lang="scss">
 
