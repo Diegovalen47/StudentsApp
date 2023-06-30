@@ -8,17 +8,71 @@ datasource db {
   relationMode = "prisma"
 }
 
-model PRUEBA {
-  Id    Int     @id
-  NAME  String  @db.VarChar(100)
-  email String? @db.VarChar(100)
-  notas nota[]
+model Course {
+  courseId   Int    @id @default(autoincrement())
+  name       String @db.VarChar(100)
+  credits    Int
+  typologyId Int
+
+  @@index([typologyId], map: "typologyId")
 }
 
-model nota {
-  id        Int     @id
-  prueba_id Int?
-  prueba    PRUEBA? @relation(fields: [prueba_id], references: [Id])
+model Inscription {
+  inscriptionId Int      @id @default(autoincrement())
+  targetScore   Decimal? @db.Decimal(2, 1)
+  courseId      Int
+  semesterId    Int
 
-  @@index([prueba_id])
+  @@index([courseId], map: "courseId")
+  @@index([semesterId], map: "semesterId")
+}
+
+model Partial {
+  partialId     Int      @id @default(autoincrement())
+  name          String   @db.VarChar(100)
+  weight        Decimal  @db.Decimal(4, 3)
+  score         Decimal? @db.Decimal(2, 1)
+  inscriptionId Int
+
+  @@index([inscriptionId], map: "inscriptionId")
+}
+
+model Semester {
+  semesterId  Int      @id @default(autoincrement())
+  number      Int
+  year        Int
+  period      Int
+  targetScore Decimal? @db.Decimal(2, 1)
+  planId      Int
+
+  @@index([planId], map: "planId")
+}
+
+model Student {
+  studentId Int     @id @default(autoincrement())
+  userName  String  @unique(map: "userName") @db.VarChar(100)
+  name      String  @db.VarChar(100)
+  lastName  String  @db.VarChar(100)
+  password  String  @db.VarChar(300)
+  email     String? @unique(map: "email") @db.VarChar(100)
+}
+
+model StudyPlan {
+  planId        Int     @id @default(autoincrement())
+  name          String  @db.VarChar(100)
+  approvalScore Decimal @db.Decimal(2, 1)
+  minimunScore  Decimal @db.Decimal(2, 1)
+  maximumScore  Decimal @db.Decimal(2, 1)
+  studentId     Int
+
+  @@index([studentId], map: "studentId")
+}
+
+model Typology {
+  typologyId      Int    @id @default(autoincrement())
+  name            String @db.VarChar(50)
+  requiredCredits Int
+  planId          Int
+
+  @@index([planId], map: "planId")
 }

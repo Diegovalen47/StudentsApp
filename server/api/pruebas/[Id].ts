@@ -1,4 +1,4 @@
-import { getPrueba } from '@/server/controllers/pruebas'
+import { getPrueba } from '../../controllers/student'
 export default defineEventHandler(async (event) => {
   const id = event.context.params?.Id
   const prueba = await getPrueba(Number(id))
