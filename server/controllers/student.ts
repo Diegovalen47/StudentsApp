@@ -1,5 +1,5 @@
 import prisma from "@/server/controllers/prisma";
-import Student from "../../models/Student";
+import Student from "@/models/Student";
 
 export async function getStudents(): Promise<Student[]> {
   const students = await prisma.student.findMany({
@@ -15,10 +15,10 @@ export async function getStudents(): Promise<Student[]> {
   return students
 }
 
-export async function getStudentById(id: number): Promise<Student | null> {
+export async function getStudentById(studentId: number): Promise<Student | null> {
   const student = await prisma.student.findUnique({
     where: {
-      studentId: id,
+      studentId: studentId,
     },
     select: {
       studentId: true,
@@ -32,7 +32,41 @@ export async function getStudentById(id: number): Promise<Student | null> {
   return student
 }
 
-export async function createStudent(student: Student) {
+export async function getStudentByUserName(userName: string): Promise<Student | null> {
+  const student = await prisma.student.findUnique({
+    where: {
+      userName: userName,
+    },
+    select: {
+      studentId: true,
+      userName: true,
+      name: true,
+      lastName: true,
+      email: true,
+      password: true
+    }
+  })
+  return student
+}
+
+export async function getStudentByEmail(email: string): Promise<Student | null> {
+  const student = await prisma.student.findUnique({
+    where: {
+      email: email,
+    },
+    select: {
+      studentId: true,
+      userName: true,
+      name: true,
+      lastName: true,
+      email: true,
+      password: true
+    }
+  })
+  return student
+}
+
+export async function createStudent(student: Student): Promise<Student | null> {
   const result = await prisma.student.create({
     data: {
       userName: student.userName,
@@ -40,6 +74,31 @@ export async function createStudent(student: Student) {
       lastName: student.lastName,
       email: student.email? student.email : null,
       password: student.password
+    }
+  })
+  return result
+}
+
+export async function updateStudent(student: Student): Promise<Student | null> {
+  const result = await prisma.student.update({
+    where: {
+      studentId: student.studentId
+    },
+    data: {
+      userName: student.userName,
+      name: student.name,
+      lastName: student.lastName,
+      email: student.email? student.email : null,
+      password: student.password
+    }
+  })
+  return result
+}
+
+export async function deleteStudent(studentId: number): Promise<Student | null> {
+  const result = await prisma.student.delete({
+    where: {
+      studentId: studentId
     }
   })
   return result
