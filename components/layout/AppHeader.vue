@@ -6,15 +6,9 @@ import ThemeSwitch from '@/components/layout/ThemeSwitch.vue';
   <v-toolbar
     color="primary"
   >
-    <v-toolbar-title>Vuetify</v-toolbar-title>
+    <v-toolbar-title>StudentsApp</v-toolbar-title>
     <v-spacer></v-spacer>
     <ThemeSwitch/>
   </v-toolbar>
 </template>
-
-<style lang="scss" scoped>
-.app-header {
-  background-color: $blue-dark-secondary;
-}
-</style>
 

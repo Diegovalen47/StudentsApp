@@ -36,7 +36,4 @@ const icons = [
 </template>
 
 <style lang="scss" scoped>
-.app-footer {
-  background-color: $blue-dark-secondary;
-}
 </style>

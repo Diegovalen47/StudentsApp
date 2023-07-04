@@ -1,8 +1,8 @@
-import { createVuetify } from 'vuetify'
+import { createVuetify, ThemeDefinition  } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-const DarkTheme = {
+const DarkTheme: ThemeDefinition  = {
   dark: true,
   colors: {
     background: '#0A2647',
@@ -19,7 +19,7 @@ const DarkTheme = {
   }
 }
 
-const LightTheme = {
+const LightTheme: ThemeDefinition  = {
   dark: false,
   colors: {
     background: '#F7FBFC',
@@ -32,7 +32,7 @@ const LightTheme = {
     info: '#26A69A',
     success: '#00E676',
     warning: '#FFC107',
-
+    
   }
 }
 

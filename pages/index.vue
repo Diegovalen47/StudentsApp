@@ -4,9 +4,6 @@ import { useSwal } from '@/composables/useSwal'
 
 const globalStore = useGlobalStore()
 const { Alert } = useSwal();
-console.log('antes de llamar a useFetch')
-const { data } = await useFetch('/api/hello')
-console.log('despues de llamar a useFetch')
 
 // methods
 function incrementHandler() {
@@ -26,8 +23,8 @@ function incrementHandler() {
 <template>
   <v-container>
     <v-row>
-      <v-col>
-        {{ data }}
+      <v-col class="d-flex align-center justify-center">
+        Landing page
       </v-col>
     </v-row>
   </v-container>
