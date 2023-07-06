@@ -1,10 +1,10 @@
 type Student = {
   studentId: number,
-  userName: string,
-  name: string,
-  lastName: string,
+  userName: string | null,
+  name: string | null,
+  lastName: string | null,
   email: string | null,
-  password: string
+  password: string | null
 }
 
 export default Student
