@@ -1,26 +1,65 @@
 <script lang="ts" setup>
 import ThemeSwitch from '@/components/layout/ThemeSwitch.vue';
+
+const { status, data, signIn, signOut } = useAuth()
+
+const loggedIn = computed(() => status.value === 'authenticated')
+
+async function handleSignIn() {
+  await signIn('google')
+}
+
+async function handleSignOut() {
+  await signOut()
+}
+
+function showData() {
+  console.log('data', data.value)
+}
+
 </script>
 
 <template>
   <v-toolbar color="primary">
-    <v-row>
-      <v-col>
-        <v-btn
-          class="ml-3"
-          variant="flat"
-          color="surface"
-        >
-          Ingresar
-        </v-btn>
-      </v-col>
-      <v-col class="d-flex justify-center align-center">
-        <h3>StudentsApp</h3>
-      </v-col>
-      <v-col class="d-flex justify-end">
-        <ThemeSwitch/>
-      </v-col>
-    </v-row>
+    <v-container fluid style="max-width: 1366px">
+      <v-row>
+        <v-col class="d-flex justify-start">
+          <v-btn
+            variant="flat"
+            color="surface"
+            to="/login"
+            rounded
+            class="text-capitalize"
+            v-if="!loggedIn"
+          >
+            Login
+          </v-btn>
+          <v-btn
+            variant="flat"
+            color="surface"
+            @click="handleSignOut"
+            rounded
+            v-else
+          >
+            Log Out
+          </v-btn>
+        </v-col>
+        <v-col class="d-flex justify-center align-center">
+          <NuxtLink 
+            to="/" 
+            style="
+              text-decoration: none;
+              color: rgba(var(--v-theme-surface));
+            "
+          >
+            <h2>StudentsApp</h2>
+          </NuxtLink>
+        </v-col>
+        <v-col class="d-flex justify-end">
+          <ThemeSwitch/>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-toolbar>
 </template>
 

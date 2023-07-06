@@ -1,7 +1,3 @@
-import vuetify from 'vite-plugin-vuetify'
-import { createResolver } from '@nuxt/kit'
-
-const { resolve } = createResolver(import.meta.url)
 
 export default defineNuxtConfig({
   devtools: { 
@@ -26,6 +22,7 @@ export default defineNuxtConfig({
   },
   modules: [
     '@pinia/nuxt',
+    '@sidebase/nuxt-auth'
   ],
   pinia: {
     autoImports: [

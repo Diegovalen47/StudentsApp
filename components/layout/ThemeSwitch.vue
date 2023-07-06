@@ -20,7 +20,6 @@ function toggleTheme() {
 <template>
   <div
     class="
-      mr-4
       d-flex flex-row align-center justify-space-between 
       switch-background
     "
