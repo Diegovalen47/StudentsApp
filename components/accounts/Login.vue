@@ -1,32 +1,14 @@
 <script lang="ts" setup>
-
+// Imports
 import RegisterModal from '@/components/accounts/RegisterModal.vue';
 import ForgotPasswordModal from '@/components/accounts/ForgotPasswordModal.vue';
 import { useDisplay } from "vuetify";
 import { useAccountsStore } from '@/store/accounts'
-
+// Composables/Hooks
 const display = useDisplay()
 const accountsStore = useAccountsStore()
-
-const showRegisterModal = computed({
-  get() {
-    return accountsStore.showRegisterModal
-  },
-  set(newValue) {
-    console.log('seteo de show', newValue)
-    accountsStore.showRegisterModal = newValue
-  }
-})
-
-const showForgotPasswordModal = computed({
-  get() {
-    return accountsStore.showForgotPasswordModal
-  },
-  set(newValue) {
-    accountsStore.showForgotPasswordModal = newValue
-  }
-})
-
+// Component Variables and Logic
+const loginForm = ref()
 const email = ref<string>('')
 const password = ref<string>('')
 const showPassword = ref<boolean>(false)
@@ -37,9 +19,32 @@ const passwordRules = ref<Array<any>>([
   (v: string) => !!v || 'Password is required',
   (v: string) => v.length >= 8 || 'Password must be at least 8 characters',
 ])
-
-function handleLogin() {
-  console.log('login', display.mdAndUp.value)
+const showRegisterModal = computed({
+  get() {
+    return accountsStore.showRegisterModal
+  },
+  set(newValue) {
+    accountsStore.showRegisterModal = newValue
+  }
+})
+const showForgotPasswordModal = computed({
+  get() {
+    return accountsStore.showForgotPasswordModal
+  },
+  set(newValue) {
+    accountsStore.showForgotPasswordModal = newValue
+  }
+})
+async function loginWithCredentials() {
+  const isLoginFormValid = (await loginForm.value.validate()).valid
+  if (isLoginFormValid) {
+    console.log('Procees with Credentials logic login')
+  } else {
+    console.log('Form is not valid')
+  }
+}
+async function loginWithGoogle() {
+  console.log('Procees with Google logic login')
 }
 
 </script>
@@ -115,7 +120,7 @@ function handleLogin() {
           block
           variant="flat"
           rounded
-          @click="handleLogin()"
+          @click="loginWithCredentials()"
         >
           Login
         </v-btn>
@@ -131,6 +136,7 @@ function handleLogin() {
           variant="outlined"
           block
           class="d-flex justify-center align-center"
+          @click="loginWithGoogle()"
         >
           <v-img
             src="/google-icon.png"
@@ -156,7 +162,7 @@ function handleLogin() {
               style="
                 color: rgba(var(--v-theme-primary));
                 cursor: pointer;
-              " 
+              "
               class="text-right"
               @click="showRegisterModal = true"
             >

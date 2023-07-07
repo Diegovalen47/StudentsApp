@@ -1,19 +1,15 @@
 <script lang="ts" setup>
-
+// Imports
 import { useAccountsStore } from '@/store/accounts'
-
+// Composables/Hooks
 const accountsStore = useAccountsStore()
-
-const showRegisterModal = computed({
-  get() {
-    return accountsStore.showRegisterModal
-  },
-  set(newValue) {
-    // Note: we are using destructuring assignment syntax here.
-    accountsStore.showRegisterModal = newValue
-  }
-})
-
+// Component Variables and Logic
+const recoveryForm = ref()
+const email = ref<string>('')
+const emailRules = ref<Array<any>>([
+  (v: string) => !!v || 'Field is required',
+  (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+])
 const showForgotPasswordModal = computed({
   get() {
     return accountsStore.showForgotPasswordModal
@@ -22,12 +18,15 @@ const showForgotPasswordModal = computed({
     accountsStore.showForgotPasswordModal = newValue
   }
 })
+async function sendEmail() {
+  const isRecoveryFormValid = (await recoveryForm.value.validate()).valid
+  if (isRecoveryFormValid) {
+    console.log('Procees with recovery logic')
+  } else {
+    console.log('Form is not valid')
+  }
+}
 
-const email = ref<string>('')
-const emailRules = ref<Array<any>>([
-  (v: string) => !!v || 'Field is required',
-  (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-])
 
 </script>
 
@@ -43,7 +42,7 @@ const emailRules = ref<Array<any>>([
       </div>
     </v-card-title>
     <v-card-text>
-      <v-form ref="registerForm">
+      <v-form ref="recoveryForm">
         <v-row>
           <v-col class="d-flex flex-column">
             <h3>Email</h3>
@@ -68,7 +67,7 @@ const emailRules = ref<Array<any>>([
             block
             variant="flat"
             rounded
-            @click="console.log('send email')"
+            @click="sendEmail()"
           >
             Send recovery
           </v-btn>

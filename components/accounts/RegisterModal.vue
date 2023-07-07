@@ -1,25 +1,21 @@
 <script lang="ts" setup>
-
+// Imports
 import { useAccountsStore } from '@/store/accounts'
-
+// Composables/Hooks
 const accountsStore = useAccountsStore()
-
-const showRegisterModal = computed({
-  get() {
-    return accountsStore.showRegisterModal
-  },
-  set(newValue) {
-    // Note: we are using destructuring assignment syntax here.
-    accountsStore.showRegisterModal = newValue
-  }
+// Component Variables and Logic
+onMounted(() => {
+  errorInTermsForm.value = false
 })
-
+const registerForm = ref()
+const termsForm = ref()
+const errorInTermsForm = ref<boolean>(false)
 const name = ref<string>('')
 const lastName = ref<string>('')
 const email = ref<string>('')
 const password = ref<string>('')
 const showPassword = ref<boolean>(false)
-const termsAndConditions = ref<boolean>(false)
+const acceptedTerms = ref<boolean>(false)
 const nameRules = ref<Array<any>>([
   (v: string) => !!v || 'Field is required',
 ])
@@ -31,6 +27,39 @@ const passwordRules = ref<Array<any>>([
   (v: string) => !!v || 'Password is required',
   (v: string) => v.length >= 8 || 'Password must be at least 8 characters',
 ])
+const showRegisterModal = computed({
+  get() {
+    return accountsStore.showRegisterModal
+  },
+  set(newValue) {
+    // Note: we are using destructuring assignment syntax here.
+    accountsStore.showRegisterModal = newValue
+  }
+})
+async function isTermsFormValid(): Promise<boolean> {
+  const valid = (await termsForm.value.validate()).valid
+  if (!valid) {
+    errorInTermsForm.value = true
+  }
+  return valid
+}
+async function signUp() {
+  const isRegisterFormValid = (await registerForm.value.validate()).valid
+  const TermsFormValid = await isTermsFormValid()
+  if (isRegisterFormValid && TermsFormValid) {
+    console.log('Procees with Register logic')
+  } else {
+    console.log('Form is not valid')
+  }
+}
+async function signUpWithGoogle() {
+  const TermsFormValid = await isTermsFormValid()
+  if (!TermsFormValid) {
+    console.log('Form is not valid')
+  } else {
+    console.log('Procees with Google logic')
+  }
+}
 
 </script>
 
@@ -38,13 +67,14 @@ const passwordRules = ref<Array<any>>([
   <v-card class="pa-6 rounded-xl" flat>
     <v-card-title class="d-flex justify-space-between">
       <h2>Sign Up</h2>
-      <v-btn
-        color="primary"
-        variant="text"
-        @click="showRegisterModal = false"
-      >
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
+      <div>
+        <v-icon
+          color="primary"
+          @click="showRegisterModal = false"
+        >
+          mdi-close
+        </v-icon>
+      </div>
     </v-card-title>
     <v-card-text>
       <v-form ref="registerForm">
@@ -105,15 +135,25 @@ const passwordRules = ref<Array<any>>([
             ></v-text-field>
           </v-col>
         </v-row>
+      </v-form>
+      <v-form ref="termsForm">
         <v-row>
           <v-col
             id="terms-checkbox"
             class="pa-0"
           >
             <v-checkbox 
-              v-model="termsAndConditions"
+              v-model="acceptedTerms"
               color="primary"
               :rules="nameRules"
+              @update:modelValue="acceptedTerms
+                ? errorInTermsForm = false 
+                : errorInTermsForm = true
+              "
+              :style="errorInTermsForm
+                ? 'color: rgba(var(--v-theme-error));' 
+                : ''
+              "
             >
               <template v-slot:label>
                 <div>
@@ -158,7 +198,7 @@ const passwordRules = ref<Array<any>>([
             block
             variant="flat"
             rounded
-            @click="console.log('register')"
+            @click="signUp()"
           >
             Sign Up
           </v-btn>
@@ -175,6 +215,7 @@ const passwordRules = ref<Array<any>>([
             variant="outlined"
             block
             class="d-flex justify-center align-center"
+            @click="signUpWithGoogle()"
           >
             <v-img
               src="/google-icon.png"
