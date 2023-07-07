@@ -6,10 +6,11 @@ import { useDisplay } from "vuetify";
 import { useAccountsStore } from '@/store/accounts'
 // Composables/Hooks
 const display = useDisplay()
+const { status, data, signIn, signOut } = useAuth()
 const accountsStore = useAccountsStore()
 // Component Variables and Logic
 const loginForm = ref()
-const email = ref<string>('')
+const userOrEmail = ref<string>('')
 const password = ref<string>('')
 const showPassword = ref<boolean>(false)
 const emailRules = ref<Array<any>>([
@@ -38,13 +39,16 @@ const showForgotPasswordModal = computed({
 async function loginWithCredentials() {
   const isLoginFormValid = (await loginForm.value.validate()).valid
   if (isLoginFormValid) {
-    console.log('Procees with Credentials logic login')
+    await signIn('credentials', { 
+      userOrEmail: userOrEmail.value, 
+      password: password.value
+    })
   } else {
     console.log('Form is not valid')
   }
 }
 async function loginWithGoogle() {
-  console.log('Procees with Google logic login')
+  await signIn('google')
 }
 
 </script>
@@ -63,7 +67,7 @@ async function loginWithGoogle() {
       <v-col class="d-flex flex-column">
         <h3>Username or email</h3>
         <v-text-field
-          v-model="email"
+          v-model="userOrEmail"
           label="Enter your username or email"
           placeholder="jonh_doe23 / jonhdoe@mail.com"
           required

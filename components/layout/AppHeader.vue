@@ -15,6 +15,7 @@ async function handleSignOut() {
 
 function showData() {
   console.log('data', data.value)
+  console.log('status', status.value)
 }
 
 </script>
@@ -42,6 +43,14 @@ function showData() {
             v-else
           >
             Log Out
+          </v-btn>
+          <v-btn
+            variant="flat"
+            color="surface"
+            @click="showData()"
+            rounded
+          >
+            Data
           </v-btn>
         </v-col>
         <v-col class="d-flex justify-center align-center">
