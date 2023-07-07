@@ -23,8 +23,10 @@ function showData() {
 <template>
   <v-toolbar color="primary">
     <v-container fluid style="max-width: 1366px">
-      <v-row>
-        <v-col class="d-flex justify-start">
+      <v-row class="d-flex justify-space-between">
+        <v-col 
+          class="d-flex justify-start"
+        >
           <v-btn
             variant="flat"
             color="surface"
@@ -53,7 +55,9 @@ function showData() {
             Data
           </v-btn>
         </v-col>
-        <v-col class="d-flex justify-center align-center">
+        <v-col
+          class="d-flex justify-center align-center"
+        >
           <NuxtLink 
             to="/" 
             style="
@@ -64,7 +68,9 @@ function showData() {
             <h2>StudentsApp</h2>
           </NuxtLink>
         </v-col>
-        <v-col class="d-flex justify-end">
+        <v-col
+          class="d-flex justify-end"
+        >
           <ThemeSwitch/>
         </v-col>
       </v-row>

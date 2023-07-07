@@ -129,7 +129,7 @@ async function signUpWithGoogle() {
               placeholder="superSecretP@s$w0rd"
               variant="underlined"
               :rules="passwordRules"
-              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               :type="showPassword ? 'text' : 'password'"
               @click:append="showPassword = !showPassword"
             ></v-text-field>

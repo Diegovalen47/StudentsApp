@@ -49,6 +49,11 @@ export default defineNuxtPlugin(nuxtApp => {
         VCardActions: {
           style: 'padding: 16px'
         }
+      },
+      VValidation: {
+        style: `
+          color: #234234;
+        `
       }
     },
     theme: {

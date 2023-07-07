@@ -9,9 +9,23 @@ const display = useDisplay()
 const { status, data, signIn, signOut } = useAuth()
 const accountsStore = useAccountsStore()
 // Component Variables and Logic
-const loginForm = ref()
-const userOrEmail = ref<string>('')
-const password = ref<string>('')
+const loginFormComponent = ref()
+const formData = ref<any>({
+  userOrEmail: '',
+  password: ''
+})
+
+const userOrEmailValid = ref<boolean>(true)
+const passwordValid = ref<boolean>(true)
+
+const userOrEmailComponent = ref()
+const passwordComponent = ref()
+
+const inputComponents = [
+  { component: userOrEmailComponent, validator : userOrEmailValid},
+  { component: passwordComponent, validator : passwordValid }
+]
+
 const showPassword = ref<boolean>(false)
 const emailRules = ref<Array<any>>([
   (v: string) => !!v || 'Field is required',
@@ -37,14 +51,23 @@ const showForgotPasswordModal = computed({
   }
 })
 async function loginWithCredentials() {
-  const isLoginFormValid = (await loginForm.value.validate()).valid
+  const isLoginFormValid = (await loginFormComponent.value.validate()).valid
   if (isLoginFormValid) {
     await signIn('credentials', { 
-      userOrEmail: userOrEmail.value, 
-      password: password.value
+      userOrEmail: formData.value.userOrEmail, 
+      password: formData.value.password
     })
   } else {
     console.log('Form is not valid')
+    for (const inputComponent of inputComponents) {
+      const isValid = (await inputComponent.component.value.validate()).valid
+      if(!isValid) {
+        inputComponent.validator.value = false
+        setTimeout(() => {
+          inputComponent.validator.value = true
+        }, 3000);
+      }
+    }
   }
 }
 async function loginWithGoogle() {
@@ -54,7 +77,9 @@ async function loginWithGoogle() {
 </script>
 
 <template>
-  <v-form ref="loginForm">
+  <v-form 
+    ref="loginFormComponent"
+  >
     <v-row>
       <v-col 
         class="d-flex"
@@ -67,10 +92,12 @@ async function loginWithGoogle() {
       <v-col class="d-flex flex-column">
         <h3>Username or email</h3>
         <v-text-field
-          v-model="userOrEmail"
+          ref="userOrEmailComponent"
+          v-model="formData.userOrEmail"
           label="Enter your username or email"
           placeholder="jonh_doe23 / jonhdoe@mail.com"
           required
+          :class="userOrEmailValid? '' : 'shake'"
           variant="underlined"
           :rules="emailRules"
         ></v-text-field>
@@ -101,13 +128,15 @@ async function loginWithGoogle() {
           </v-dialog>
         </div>
         <v-text-field
-          v-model="password"
+          ref="passwordComponent"
+          v-model="formData.password"
           label="Enter your password"
           placeholder="superSecretP@s$w0rd"
           variant="underlined"
+          :class="passwordValid? '' : 'shake'"
           required
           :rules="passwordRules"
-          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
           @click:append="showPassword = !showPassword"
         ></v-text-field>

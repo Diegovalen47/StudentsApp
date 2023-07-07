@@ -12,6 +12,15 @@ export default defineNuxtConfig({
       }
     }
   },
+  modules: [
+    '@pinia/nuxt',
+    '@sidebase/nuxt-auth'
+  ],
+  auth: {
+    // @ts-expect-error type is different
+    origin: process.env.AUTH_ORIGIN,
+    basePath: '/api/auth',
+  },
   css: [
     '@/assets/css/global.scss',
     'vuetify/lib/styles/main.sass',
@@ -20,10 +29,6 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
-  modules: [
-    '@pinia/nuxt',
-    '@sidebase/nuxt-auth'
-  ],
   pinia: {
     autoImports: [
       // automatically imports `defineStore`

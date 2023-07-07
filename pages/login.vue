@@ -4,7 +4,7 @@ import Login from "@/components/accounts/Login.vue";
 </script>
 
 <template>
-  <v-container fluid style="max-width: 1366px">
+  <v-container fluid class="py-16" style="max-width: 1366px">
     <v-row>
       <v-col
         cols="12"
