@@ -1,8 +1,31 @@
 <script lang="ts" setup>
 
+import RegisterModal from '@/components/accounts/RegisterModal.vue';
+import ForgotPasswordModal from '@/components/accounts/ForgotPasswordModal.vue';
 import { useDisplay } from "vuetify";
+import { useAccountsStore } from '@/store/accounts'
 
 const display = useDisplay()
+const accountsStore = useAccountsStore()
+
+const showRegisterModal = computed({
+  get() {
+    return accountsStore.showRegisterModal
+  },
+  set(newValue) {
+    console.log('seteo de show', newValue)
+    accountsStore.showRegisterModal = newValue
+  }
+})
+
+const showForgotPasswordModal = computed({
+  get() {
+    return accountsStore.showForgotPasswordModal
+  },
+  set(newValue) {
+    accountsStore.showForgotPasswordModal = newValue
+  }
+})
 
 const email = ref<string>('')
 const password = ref<string>('')
@@ -48,15 +71,25 @@ function handleLogin() {
       <v-col class="d-flex flex-column">
         <div class="d-flex flex-row justify-space-between">
           <h3>Password</h3>
-          <NuxtLink
-            to="/"
-            style="
-              text-decoration: none;
-              color: rgba(var(--v-theme-primary));
-            "
+          <v-dialog
+            v-model="showForgotPasswordModal"
+            persistent
+            width="512"
           >
-            <span style="color: rgba(var(--v-theme-primary))" class="text-right" >Forgot your password?</span>
-          </NuxtLink>
+            <template v-slot:activator="{ props }">
+              <span 
+                style="
+                  color: rgba(var(--v-theme-primary));
+                  cursor: pointer;
+                " 
+                class="text-right"
+                @click="showForgotPasswordModal = true"
+              >
+                Forgot your password?
+              </span>
+            </template>
+            <ForgotPasswordModal/>
+          </v-dialog>
         </div>
         <v-text-field
           v-model="password"
@@ -72,7 +105,11 @@ function handleLogin() {
       </v-col>
     </v-row>
     <v-row>
-      <v-col class="d-flex justify-start">
+      <v-col 
+        cols="12"
+        sm="6"
+        class="d-flex justify-start"
+      >
         <v-btn
           color="primary"
           block
@@ -83,7 +120,10 @@ function handleLogin() {
           Login
         </v-btn>
       </v-col>
-      <v-col>
+      <v-col
+        cols="12"
+        sm="6"
+      >
         <v-btn
           fab
           color="primary"
@@ -106,15 +146,25 @@ function handleLogin() {
     <v-row>
       <v-col class="d-flex flex-row justify-center">
         <span class="pr-2">Don't have an account?</span>
-        <NuxtLink
-          to="/"
-          style="
-            text-decoration: none;
-            color: rgba(var(--v-theme-primary));
-          "
+        <v-dialog
+          v-model="showRegisterModal"
+          persistent
+          width="683"
         >
-          <span style="color: rgba(var(--v-theme-primary))" class="text-right" >Sign Up</span>
-        </NuxtLink>
+          <template v-slot:activator="{ props }">
+            <span 
+              style="
+                color: rgba(var(--v-theme-primary));
+                cursor: pointer;
+              " 
+              class="text-right"
+              @click="showRegisterModal = true"
+            >
+              Sign Up
+            </span>
+          </template>
+          <RegisterModal />
+        </v-dialog>
       </v-col>
     </v-row>
   </v-form>

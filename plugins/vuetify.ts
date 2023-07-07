@@ -38,6 +38,19 @@ const LightTheme: ThemeDefinition  = {
 
 export default defineNuxtPlugin(nuxtApp => {
   const vuetify = createVuetify({
+    defaults: {
+      VCard: {
+        VCardText: {
+          style: 'padding: 16px'
+        },
+        VCardTitle: {
+          style: 'padding: 16px'
+        },
+        VCardActions: {
+          style: 'padding: 16px'
+        }
+      }
+    },
     theme: {
       defaultTheme: 'LightTheme',
       themes: {
