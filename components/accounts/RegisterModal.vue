@@ -3,16 +3,18 @@
 import { useAccountsStore } from '@/store/accounts'
 import useFormValidator from '@/composables/useFormValidator'
 import useInputRules from '@/composables/useInputRules'
+import { useSwal } from '@/composables/useSwal'
 
 const accountsStore = useAccountsStore()
 const inputRules = useInputRules()
+const { Alert } = useSwal();
 
 const formData = ref<any>({
-  userName: '',
-  name: '',
-  lastName: '',
-  email: '',
-  password: ''
+  userName: null,
+  name: null,
+  lastName: null,
+  email: null,
+  password: null,
 })
 const acceptedTerms = ref<boolean>(false)
 const showPassword = ref<boolean>(false)
@@ -96,7 +98,6 @@ const showRegisterModal = computed({
     return accountsStore.showRegisterModal
   },
   set(newValue) {
-    // Note: we are using destructuring assignment syntax here.
     accountsStore.showRegisterModal = newValue
   }
 })
@@ -104,19 +105,33 @@ const showRegisterModal = computed({
 async function signUp() {
   const isValid = await RegisterValidator.validateForm()
   if (isValid) {
-    console.log('Procees with Register logic')
-    console.log('data sent',formData.value)
-    const payload = formData.value
-    const badPayload = {
-      name: formData.value.name
+    const { data } = await useFetch(
+      '/api/students', 
+      {
+        method: 'POST',
+        body: JSON.stringify(formData.value)
+      }
+    )
+    const dataObject: any = toRaw(data.value)
+    if (dataObject.error === false) {
+      showRegisterModal.value = false
+      Alert.fire({
+        title: dataObject.message,
+        text: `${dataObject.student.name} registered successfully`,
+        icon: 'success',
+        confirmButtonText: 'Cool',
+        allowOutsideClick: true,
+      })
+    } else {
+      Alert.fire({
+        title: dataObject.message,
+        toast: true,
+        position: 'top-end',
+        text: 'Check your data and try again',
+        icon: 'error',
+        confirmButtonText: 'Cool',
+      })
     }
-    const response = await useFetch('/api/students', {
-      method: 'POST',
-      body: badPayload
-    })
-    console.log('response', response.data.value)
-  } else {
-    console.log('Form is not valid')
   }
 }
 async function signUpWithGoogle() {

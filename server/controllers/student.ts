@@ -98,11 +98,11 @@ export async function getStudentByEmail(email: string): Promise<Student | null> 
 export async function createStudent(student: Student) {
   const result = await prisma.student.create({
     data: {
-      userName: student.userName? student.userName : null,
+      userName: student.userName,
       name: student.name,
-      lastName: student.lastName? student.lastName : null,
+      lastName: student.lastName,
       email: student.email,
-      password: student.password? student.password : null
+      password: student.password
     }
   })
   return result

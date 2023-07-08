@@ -4,22 +4,28 @@ import ForgotPasswordModal from '@/components/accounts/ForgotPasswordModal.vue';
 import { useDisplay } from "vuetify";
 import { useAccountsStore } from '@/store/accounts'
 import useFormValidator from '@/composables/useFormValidator'
+import useInputRules from '@/composables/useInputRules'
 
 const display = useDisplay()
 const { signIn } = useAuth()
 const accountsStore = useAccountsStore()
+const inputRules = useInputRules()
 
 const formData = ref<any>({
   userOrEmail: '',
   password: ''
 })
 const showPassword = ref<boolean>(false)
-const emailRules = ref<Array<any>>([
-  (v: string) => !!v || 'Field is required',
+const usernameOrEmailRules = ref<Array<any>>([
+  inputRules.fieldRequired,
+  inputRules.noOnlySpaces,
+  inputRules.noStartWithSpaces,
+  inputRules.noEndWithSpaces,
+  inputRules.noSpaces
 ])
 const passwordRules = ref<Array<any>>([
-  (v: string) => !!v || 'Password is required',
-  (v: string) => v.length >= 8 || 'Password must be at least 8 characters',
+  inputRules.fieldRequired,
+  inputRules.noOnlySpaces,
 ])
 
 const userOrEmailComponent = ref()
@@ -90,7 +96,7 @@ async function loginWithGoogle() {
           required
           :class="userOrEmailValidator? '' : 'shake'"
           variant="underlined"
-          :rules="emailRules"
+          :rules="usernameOrEmailRules"
         ></v-text-field>
       </v-col>
     </v-row>

@@ -2,8 +2,10 @@
 
 import { useAccountsStore } from '@/store/accounts'
 import useFormValidator from '@/composables/useFormValidator'
+import useInputRules from '@/composables/useInputRules'
 
 const accountsStore = useAccountsStore()
+const inputRules = useInputRules()
 
 const recoveryFormComponent = ref()
 const recoveryFormValidator = ref<boolean>(true)
@@ -15,8 +17,11 @@ const { validateForm } = useFormValidator([
 ])
 const email = ref<string>('')
 const emailRules = ref<Array<any>>([
-  (v: string) => !!v || 'Field is required',
-  (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+  inputRules.fieldRequired,
+  inputRules.noOnlySpaces,
+  inputRules.noStartWithSpaces,
+  inputRules.noEndWithSpaces,
+  inputRules.emailValid
 ])
 const showForgotPasswordModal = computed({
   get() {

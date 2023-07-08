@@ -1,5 +1,6 @@
 import { createStudent } from "@/server/controllers/student";
 import { Prisma } from '@prisma/client'
+import { validValue } from '@/utils/fieldsValidation'
 import Student from "@/models/Student";
 
 export default defineEventHandler(async (event) => {
@@ -13,35 +14,41 @@ export default defineEventHandler(async (event) => {
     } = await readBody(event)
     if(name === undefined) {
       return {
-        error: 'name is required'
+        error: true,
+        message: 'name is required',
+        student: null
       }
     }
     if(email === undefined) {
       return {
-        error: 'email is required'
+        error: true,
+        message: 'email is required',
+        student: null
       }
     }
     const student: Student = {
-      studentId: 0,
-      userName: userName,
+      studentId: -1,
       name: name,
-      lastName: lastName,
       email: email,
-      password: password
+      userName: validValue(userName),
+      lastName: validValue(lastName),
+      password: validValue(password),
     }
     console.log(student)
     const newStudent = await createStudent(student)
-    return newStudent
+    return {
+      message: 'Student created',
+      student: newStudent,
+      error: false
+    }
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      console.log(error.message)
-      console.log(error.code)
       if (error.code === 'P2002') {
         console.log('User already exists')
         return {
-          code: 'P2002',
-          error: 'Student already exists',
-          message: error.message
+          error: true,
+          message: `${error.code}: Student already exists`,
+          student: null
         }
       }
     }
