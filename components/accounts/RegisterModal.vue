@@ -1,21 +1,18 @@
 <script lang="ts" setup>
-// Imports
+
 import { useAccountsStore } from '@/store/accounts'
-// Composables/Hooks
+import useFormValidator from '@/composables/useFormValidator'
+
 const accountsStore = useAccountsStore()
-// Component Variables and Logic
-onMounted(() => {
-  errorInTermsForm.value = false
+
+const formData = ref<any>({
+  name: '',
+  lastName: '',
+  email: '',
+  password: ''
 })
-const registerForm = ref()
-const termsForm = ref()
-const errorInTermsForm = ref<boolean>(false)
-const name = ref<string>('')
-const lastName = ref<string>('')
-const email = ref<string>('')
-const password = ref<string>('')
-const showPassword = ref<boolean>(false)
 const acceptedTerms = ref<boolean>(false)
+const showPassword = ref<boolean>(false)
 const nameRules = ref<Array<any>>([
   (v: string) => !!v || 'Field is required',
 ])
@@ -27,6 +24,46 @@ const passwordRules = ref<Array<any>>([
   (v: string) => !!v || 'Password is required',
   (v: string) => v.length >= 8 || 'Password must be at least 8 characters',
 ])
+
+const nameComponent = ref()
+const nameValidator = ref<boolean>(true)
+const lastNameComponent = ref()
+const lastNameValidator = ref<boolean>(true)
+const emailComponent = ref()
+const emailValidator = ref<boolean>(true)
+const passwordComponent = ref()
+const passwordValidator = ref<boolean>(true)
+const termsComponent = ref()
+const termsValidator = ref<boolean>(true)
+const RegisterValidator = useFormValidator([
+  { 
+    component: nameComponent, 
+    validator: nameValidator
+  },
+  { 
+    component: lastNameComponent, 
+    validator: lastNameValidator
+  },
+  { 
+    component: emailComponent, 
+    validator: emailValidator
+  },
+  { 
+    component: passwordComponent,
+    validator: passwordValidator 
+  },
+  { 
+    component: termsComponent,
+    validator: termsValidator 
+  }
+])
+const GoogleRegisterValidator  = useFormValidator([
+  { 
+    component: termsComponent,
+    validator: termsValidator 
+  }
+])
+
 const showRegisterModal = computed({
   get() {
     return accountsStore.showRegisterModal
@@ -36,28 +73,21 @@ const showRegisterModal = computed({
     accountsStore.showRegisterModal = newValue
   }
 })
-async function isTermsFormValid(): Promise<boolean> {
-  const valid = (await termsForm.value.validate()).valid
-  if (!valid) {
-    errorInTermsForm.value = true
-  }
-  return valid
-}
+
 async function signUp() {
-  const isRegisterFormValid = (await registerForm.value.validate()).valid
-  const TermsFormValid = await isTermsFormValid()
-  if (isRegisterFormValid && TermsFormValid) {
+  const isValid = await RegisterValidator.validateForm()
+  if (isValid) {
     console.log('Procees with Register logic')
   } else {
     console.log('Form is not valid')
   }
 }
 async function signUpWithGoogle() {
-  const TermsFormValid = await isTermsFormValid()
-  if (!TermsFormValid) {
-    console.log('Form is not valid')
-  } else {
+  const isValid = await GoogleRegisterValidator.validateForm()
+  if (isValid) {
     console.log('Procees with Google logic')
+  } else {
+    console.log('Form is not valid Google')
   }
 }
 
@@ -77,7 +107,7 @@ async function signUpWithGoogle() {
       </div>
     </v-card-title>
     <v-card-text>
-      <v-form ref="registerForm">
+      <v-form>
         <v-row>
           <v-col 
             class="d-flex flex-column"
@@ -86,10 +116,12 @@ async function signUpWithGoogle() {
           >
             <h3>Name</h3>
             <v-text-field
-              v-model="name"
+              ref="nameComponent"
+              v-model="formData.name"
               label="Enter your name"
               placeholder="Jhon"
               variant="underlined"
+              :class="nameValidator? '' : 'shake'"
               :rules="nameRules"
             ></v-text-field>
           </v-col>
@@ -100,10 +132,12 @@ async function signUpWithGoogle() {
           >
             <h3>Last Name</h3>
             <v-text-field
-              v-model="lastName"
+              ref="lastNameComponent"
+              v-model="formData.lastName"
               label="Enter your last name"
               placeholder="Doe"
               variant="underlined"
+              :class="lastNameValidator? '' : 'shake'"
               :rules="nameRules"
             ></v-text-field>
           </v-col>
@@ -112,10 +146,12 @@ async function signUpWithGoogle() {
           <v-col class="d-flex flex-column">
             <h3>Email</h3>
             <v-text-field
-              v-model="email"
+              ref="emailComponent"
+              v-model="formData.email"
               label="Enter your email"
               placeholder="jonhdoe@mail.com"
               variant="underlined"
+              :class="emailValidator? '' : 'shake'"
               :rules="emailRules"
             ></v-text-field>
           </v-col>
@@ -124,19 +160,21 @@ async function signUpWithGoogle() {
           <v-col class="pb-0 d-flex flex-column">
             <h3>Password</h3>
             <v-text-field
-              v-model="password"
+              ref="passwordComponent"
+              v-model="formData.password"
               label="Enter your password"
               placeholder="superSecretP@s$w0rd"
               variant="underlined"
+              :class="passwordValidator? '' : 'shake'"
               :rules="passwordRules"
-              :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               :type="showPassword ? 'text' : 'password'"
               @click:append="showPassword = !showPassword"
             ></v-text-field>
           </v-col>
         </v-row>
       </v-form>
-      <v-form ref="termsForm">
+      <v-form ref="termsComponent">
         <v-row>
           <v-col
             id="terms-checkbox"
@@ -146,11 +184,8 @@ async function signUpWithGoogle() {
               v-model="acceptedTerms"
               color="primary"
               :rules="nameRules"
-              @update:modelValue="acceptedTerms
-                ? errorInTermsForm = false 
-                : errorInTermsForm = true
-              "
-              :style="errorInTermsForm
+              :class="termsValidator || acceptedTerms? '' : 'shake'"
+              :style="!termsValidator && !acceptedTerms
                 ? 'color: rgba(var(--v-theme-error));' 
                 : ''
               "

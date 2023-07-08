@@ -1,31 +1,18 @@
 <script lang="ts" setup>
-// Imports
 import RegisterModal from '@/components/accounts/RegisterModal.vue';
 import ForgotPasswordModal from '@/components/accounts/ForgotPasswordModal.vue';
 import { useDisplay } from "vuetify";
 import { useAccountsStore } from '@/store/accounts'
-// Composables/Hooks
+import useFormValidator from '@/composables/useFormValidator'
+
 const display = useDisplay()
-const { status, data, signIn, signOut } = useAuth()
+const { signIn } = useAuth()
 const accountsStore = useAccountsStore()
-// Component Variables and Logic
-const loginFormComponent = ref()
+
 const formData = ref<any>({
   userOrEmail: '',
   password: ''
 })
-
-const userOrEmailValid = ref<boolean>(true)
-const passwordValid = ref<boolean>(true)
-
-const userOrEmailComponent = ref()
-const passwordComponent = ref()
-
-const inputComponents = [
-  { component: userOrEmailComponent, validator : userOrEmailValid},
-  { component: passwordComponent, validator : passwordValid }
-]
-
 const showPassword = ref<boolean>(false)
 const emailRules = ref<Array<any>>([
   (v: string) => !!v || 'Field is required',
@@ -34,6 +21,22 @@ const passwordRules = ref<Array<any>>([
   (v: string) => !!v || 'Password is required',
   (v: string) => v.length >= 8 || 'Password must be at least 8 characters',
 ])
+
+const userOrEmailComponent = ref()
+const userOrEmailValidator = ref<boolean>(true)
+const passwordComponent = ref()
+const passwordValidator = ref<boolean>(true)
+const { validateForm } = useFormValidator([
+  { 
+    component: userOrEmailComponent, 
+    validator: userOrEmailValidator
+  },
+  { 
+    component: passwordComponent,
+    validator: passwordValidator 
+  }
+])
+
 const showRegisterModal = computed({
   get() {
     return accountsStore.showRegisterModal
@@ -50,24 +53,14 @@ const showForgotPasswordModal = computed({
     accountsStore.showForgotPasswordModal = newValue
   }
 })
+
 async function loginWithCredentials() {
-  const isLoginFormValid = (await loginFormComponent.value.validate()).valid
-  if (isLoginFormValid) {
+  const isValid = await validateForm()
+  if(isValid) {
     await signIn('credentials', { 
       userOrEmail: formData.value.userOrEmail, 
       password: formData.value.password
     })
-  } else {
-    console.log('Form is not valid')
-    for (const inputComponent of inputComponents) {
-      const isValid = (await inputComponent.component.value.validate()).valid
-      if(!isValid) {
-        inputComponent.validator.value = false
-        setTimeout(() => {
-          inputComponent.validator.value = true
-        }, 3000);
-      }
-    }
   }
 }
 async function loginWithGoogle() {
@@ -77,9 +70,7 @@ async function loginWithGoogle() {
 </script>
 
 <template>
-  <v-form 
-    ref="loginFormComponent"
-  >
+  <v-form>
     <v-row>
       <v-col 
         class="d-flex"
@@ -97,7 +88,7 @@ async function loginWithGoogle() {
           label="Enter your username or email"
           placeholder="jonh_doe23 / jonhdoe@mail.com"
           required
-          :class="userOrEmailValid? '' : 'shake'"
+          :class="userOrEmailValidator? '' : 'shake'"
           variant="underlined"
           :rules="emailRules"
         ></v-text-field>
@@ -133,10 +124,10 @@ async function loginWithGoogle() {
           label="Enter your password"
           placeholder="superSecretP@s$w0rd"
           variant="underlined"
-          :class="passwordValid? '' : 'shake'"
+          :class="passwordValidator? '' : 'shake'"
           required
           :rules="passwordRules"
-          :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+          :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
           @click:append="showPassword = !showPassword"
         ></v-text-field>
