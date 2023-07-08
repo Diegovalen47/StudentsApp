@@ -11,6 +11,16 @@ export default defineEventHandler(async (event) => {
       email, 
       password 
     } = await readBody(event)
+    if(name === undefined) {
+      return {
+        error: 'name is required'
+      }
+    }
+    if(email === undefined) {
+      return {
+        error: 'email is required'
+      }
+    }
     const student: Student = {
       studentId: 0,
       userName: userName,
@@ -24,6 +34,8 @@ export default defineEventHandler(async (event) => {
     return newStudent
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      console.log(error.message)
+      console.log(error.code)
       if (error.code === 'P2002') {
         console.log('User already exists')
         return {

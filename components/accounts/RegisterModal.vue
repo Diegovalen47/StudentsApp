@@ -2,8 +2,10 @@
 
 import { useAccountsStore } from '@/store/accounts'
 import useFormValidator from '@/composables/useFormValidator'
+import useInputRules from '@/composables/useInputRules'
 
 const accountsStore = useAccountsStore()
+const inputRules = useInputRules()
 
 const formData = ref<any>({
   userName: '',
@@ -15,19 +17,33 @@ const formData = ref<any>({
 const acceptedTerms = ref<boolean>(false)
 const showPassword = ref<boolean>(false)
 const userNameRules = ref<Array<any>>([
-  (v: string) => !!v || 'Field is required',
-  (v: string) => !/\s/.test(v) || 'Cannot have spaces',
+  inputRules.fieldRequired,
+  inputRules.noStartWithSpaces,
+  inputRules.noOnlySpaces,
+  inputRules.noSpaces,
+  inputRules.noEndWithSpaces
 ])
 const nameRules = ref<Array<any>>([
-  (v: string) => !!v || 'Field is required',
+  inputRules.fieldRequired,
+  inputRules.noStartWithSpaces,
+  inputRules.noOnlySpaces,
+  inputRules.nameValid,
+  inputRules.noEndWithSpaces
 ])
 const emailRules = ref<Array<any>>([
-  (v: string) => !!v || 'Field is required',
-  (v: string) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+  inputRules.fieldRequired,
+  inputRules.noStartWithSpaces,
+  inputRules.noOnlySpaces,
+  inputRules.emailValid,
+  inputRules.noEndWithSpaces
 ])
 const passwordRules = ref<Array<any>>([
-  (v: string) => !!v || 'Password is required',
-  (v: string) => v.length >= 8 || 'Password must be at least 8 characters',
+  inputRules.fieldRequired,
+  inputRules.noStartWithSpaces,
+  inputRules.noOnlySpaces,
+  inputRules.passwordMinLength,
+  inputRules.securePassword,
+  inputRules.noEndWithSpaces
 ])
 
 const userNameComponent = ref()
