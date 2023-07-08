@@ -6,6 +6,7 @@ import useFormValidator from '@/composables/useFormValidator'
 const accountsStore = useAccountsStore()
 
 const formData = ref<any>({
+  userName: '',
   name: '',
   lastName: '',
   email: '',
@@ -13,6 +14,10 @@ const formData = ref<any>({
 })
 const acceptedTerms = ref<boolean>(false)
 const showPassword = ref<boolean>(false)
+const userNameRules = ref<Array<any>>([
+  (v: string) => !!v || 'Field is required',
+  (v: string) => !/\s/.test(v) || 'Cannot have spaces',
+])
 const nameRules = ref<Array<any>>([
   (v: string) => !!v || 'Field is required',
 ])
@@ -25,6 +30,8 @@ const passwordRules = ref<Array<any>>([
   (v: string) => v.length >= 8 || 'Password must be at least 8 characters',
 ])
 
+const userNameComponent = ref()
+const userNameValidator = ref<boolean>(true)
 const nameComponent = ref()
 const nameValidator = ref<boolean>(true)
 const lastNameComponent = ref()
@@ -36,6 +43,10 @@ const passwordValidator = ref<boolean>(true)
 const termsComponent = ref()
 const termsValidator = ref<boolean>(true)
 const RegisterValidator = useFormValidator([
+  { 
+    component: userNameComponent, 
+    validator: userNameValidator
+  },
   { 
     component: nameComponent, 
     validator: nameValidator
@@ -78,6 +89,16 @@ async function signUp() {
   const isValid = await RegisterValidator.validateForm()
   if (isValid) {
     console.log('Procees with Register logic')
+    console.log('data sent',formData.value)
+    const payload = formData.value
+    const badPayload = {
+      name: formData.value.name
+    }
+    const response = await useFetch('/api/students', {
+      method: 'POST',
+      body: badPayload
+    })
+    console.log('response', response.data.value)
   } else {
     console.log('Form is not valid')
   }
@@ -109,8 +130,22 @@ async function signUpWithGoogle() {
     <v-card-text>
       <v-form>
         <v-row>
+          <v-col class="pb-0 d-flex flex-column">
+            <h3>User Name</h3>
+            <v-text-field
+              ref="userNameComponent"
+              v-model="formData.userName"
+              label="Enter your user name"
+              placeholder="jhon34_Doe"
+              variant="underlined"
+              :class="userNameValidator? '' : 'shake'"
+              :rules="userNameRules"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
           <v-col 
-            class="d-flex flex-column"
+            class="pb-0 d-flex flex-column"
             cols="12"
             md="6"
           >
@@ -126,7 +161,7 @@ async function signUpWithGoogle() {
             ></v-text-field>
           </v-col>
           <v-col 
-            class="d-flex flex-column"
+            class="pb-0 d-flex flex-column"
             cols="12"
             md="6"
           >
@@ -143,7 +178,7 @@ async function signUpWithGoogle() {
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="d-flex flex-column">
+          <v-col class="pb-0 d-flex flex-column">
             <h3>Email</h3>
             <v-text-field
               ref="emailComponent"

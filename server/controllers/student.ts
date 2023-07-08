@@ -95,24 +95,17 @@ export async function getStudentByEmail(email: string): Promise<Student | null> 
   }
 }
 
-export async function createStudent(student: Student): Promise<Student | null> {
-  try {
-    const result = await prisma.student.create({
-      data: {
-        userName: student.userName,
-        name: student.name,
-        lastName: student.lastName,
-        email: student.email? student.email : null,
-        password: student.password
-      }
-    })
-    return result
-  } catch (error) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      console.log(error.message)
+export async function createStudent(student: Student) {
+  const result = await prisma.student.create({
+    data: {
+      userName: student.userName? student.userName : null,
+      name: student.name,
+      lastName: student.lastName? student.lastName : null,
+      email: student.email,
+      password: student.password? student.password : null
     }
-    throw error
-  }
+  })
+  return result
 }
 
 export async function updateStudent(student: Student): Promise<Student | null> {
@@ -125,7 +118,7 @@ export async function updateStudent(student: Student): Promise<Student | null> {
         userName: student.userName,
         name: student.name,
         lastName: student.lastName,
-        email: student.email? student.email : null,
+        email: student.email,
         password: student.password
       }
     })

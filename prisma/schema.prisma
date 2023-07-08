@@ -52,10 +52,10 @@ model Semester {
 model Student {
   studentId  Int     @id @default(autoincrement())
   userName   String? @unique(map: "userName") @db.VarChar(100)
-  name       String? @db.VarChar(100)
+  name       String  @db.VarChar(100)
   lastName   String? @db.VarChar(100)
   password   String? @db.VarChar(300)
-  email      String? @unique(map: "email") @db.VarChar(100)
+  email      String  @unique(map: "email") @db.VarChar(100)
 }
 
 model StudyPlan {

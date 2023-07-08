@@ -1,10 +1,18 @@
 <script lang="ts" setup>
-// Imports
+
 import { useAccountsStore } from '@/store/accounts'
-// Composables/Hooks
+import useFormValidator from '@/composables/useFormValidator'
+
 const accountsStore = useAccountsStore()
-// Component Variables and Logic
-const recoveryForm = ref()
+
+const recoveryFormComponent = ref()
+const recoveryFormValidator = ref<boolean>(true)
+const { validateForm } = useFormValidator([
+  { 
+    component: recoveryFormComponent, 
+    validator: recoveryFormValidator
+  }
+])
 const email = ref<string>('')
 const emailRules = ref<Array<any>>([
   (v: string) => !!v || 'Field is required',
@@ -19,7 +27,7 @@ const showForgotPasswordModal = computed({
   }
 })
 async function sendEmail() {
-  const isRecoveryFormValid = (await recoveryForm.value.validate()).valid
+  const isRecoveryFormValid = await validateForm()
   if (isRecoveryFormValid) {
     console.log('Procees with recovery logic')
   } else {
@@ -42,7 +50,7 @@ async function sendEmail() {
       </div>
     </v-card-title>
     <v-card-text>
-      <v-form ref="recoveryForm">
+      <v-form ref="recoveryFormComponent">
         <v-row>
           <v-col class="d-flex flex-column">
             <h3>Email</h3>
@@ -51,6 +59,7 @@ async function sendEmail() {
               label="Enter your email"
               placeholder="jonhdoe@mail.com"
               variant="underlined"
+              :class="recoveryFormValidator? '' : 'shake'"
               :rules="emailRules"
             ></v-text-field>
           </v-col>

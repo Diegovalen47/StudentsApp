@@ -1,9 +1,9 @@
 type Student = {
   studentId: number,
   userName: string | null,
-  name: string | null,
+  name: string,
   lastName: string | null,
-  email: string | null,
+  email: string,
   password: string | null
 }
 
