@@ -16,10 +16,39 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@sidebase/nuxt-auth'
   ],
+  runtimeConfig: {
+    public: {
+      baseURL: process.env.BASE_URL
+    },
+    private: {
+      serverBaseURL: process.env.SERVER_BASE_URL
+    }
+  },
   auth: {
-    // @ts-expect-error type is different
+    baseURL: '/api/auth',
+    provider: {
+      type: 'local',
+      endpoints: {
+        signIn: { path: '/login', method: 'post' },
+        signOut: { path: '/logout', method: 'post' },
+        signUp: { path: '/register', method: 'post' },
+        getSession: { path: '/student', method: 'get' }
+      },
+      pages: {
+        login: '/login'
+      },
+      token: {
+        signInResponseTokenPointer: '/token/accessToken',
+        maxAgeInSeconds: 60*5 // 5 minutes
+      },
+    },
+    session: {
+      enableRefreshPeriodically: false,
+      enableRefreshOnWindowFocus: false,
+    },
+    // @ts-expect-error
     origin: process.env.AUTH_ORIGIN,
-    basePath: '/api/auth',
+    globalAppMiddleware: true
   },
   css: [
     '@/assets/css/global.scss',

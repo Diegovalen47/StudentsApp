@@ -1,5 +1,11 @@
 <script lang="ts" setup>
 import Login from "@/components/accounts/Login.vue";
+definePageMeta({
+  auth: {
+    unauthenticatedOnly: true,
+    navigateAuthenticatedTo: '/dashboard',
+  }
+})
 
 </script>
 

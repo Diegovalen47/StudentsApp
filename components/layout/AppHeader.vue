@@ -5,12 +5,8 @@ const { status, data, signIn, signOut } = useAuth()
 
 const loggedIn = computed(() => status.value === 'authenticated')
 
-async function handleSignIn() {
-  await signIn('google')
-}
-
 async function handleSignOut() {
-  await signOut()
+  await signOut({ callbackUrl: '/' })
 }
 
 function showData() {
@@ -46,14 +42,14 @@ function showData() {
           >
             Log Out
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             variant="flat"
             color="surface"
             @click="showData()"
             rounded
           >
             Data
-          </v-btn>
+          </v-btn> -->
         </v-col>
         <v-col
           class="d-flex justify-center align-center"

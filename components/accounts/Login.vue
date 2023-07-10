@@ -2,14 +2,16 @@
 import RegisterModal from '@/components/accounts/RegisterModal.vue';
 import ForgotPasswordModal from '@/components/accounts/ForgotPasswordModal.vue';
 import { useDisplay } from "vuetify";
+import { useSwal } from '@/composables/useSwal'
 import { useAccountsStore } from '@/store/accounts'
 import useFormValidator from '@/composables/useFormValidator'
 import useInputRules from '@/composables/useInputRules'
 
 const display = useDisplay()
-const { signIn } = useAuth()
+const { status, signIn } = useAuth()
 const accountsStore = useAccountsStore()
 const inputRules = useInputRules()
+const { Alert } = useSwal();
 
 const formData = ref<any>({
   userOrEmail: '',
@@ -63,14 +65,37 @@ const showForgotPasswordModal = computed({
 async function loginWithCredentials() {
   const isValid = await validateForm()
   if(isValid) {
-    await signIn('credentials', { 
-      userOrEmail: formData.value.userOrEmail, 
-      password: formData.value.password
-    })
+    try {
+      const response = await signIn({ 
+        userOrEmail: formData.value.userOrEmail, 
+        password: formData.value.password
+      },
+      { 
+        callbackUrl: '/dashboard' 
+      })
+      console.log(response)
+      Alert.fire({
+        title: 'Success',
+        toast: true,
+        position: 'top-end',
+        text: 'Logged in successfully',
+        icon: 'success',
+        confirmButtonText: 'Cool',
+        allowOutsideClick: false,
+      })
+    } catch (error) {
+      Alert.fire({
+        title: 'Error',
+        text: `Invalid credentials, try again`,
+        icon: 'error',
+        confirmButtonText: 'Cool',
+        allowOutsideClick: true,
+      })
+    }
   }
 }
 async function loginWithGoogle() {
-  await signIn('google')
+  await signIn( { provider: 'google' } )
 }
 
 </script>

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 definePageMeta({ 
-  auth: false 
+  middleware: 'auth' 
 })
 </script>
 
@@ -8,7 +8,7 @@ definePageMeta({
   <v-container>
     <v-row>
       <v-col class="d-flex align-center justify-center">
-        Landing page
+        Dashboard page
       </v-col>
     </v-row>
   </v-container>
