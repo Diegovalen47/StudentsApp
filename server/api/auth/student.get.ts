@@ -1,56 +1,43 @@
 // @ts-expect-error - this is a workaround for the CommonJS/ESM incompatibility
 import jwt from 'jsonwebtoken'
-import { H3Event } from 'h3'
+import { getStudentById } from "@/server/controllers/student";
 
 const SECRET = process.env.AUTH_SECRET as string
-const TOKEN_TYPE = 'Bearer'
 
-const extractToken = (authHeaderValue: string) => {
-  const [, token] = authHeaderValue.split(`${TOKEN_TYPE} `)
-  return token
-}
-
-const ensureAuth = (event: H3Event) => {
+export default defineEventHandler(async (event) => {
 
   const cookieHeaderValue = getRequestHeader(event, 'Cookie')
-  const authHeaderValue = getRequestHeader(event, 'Authorization')
-  console.log('auth header', authHeaderValue)
   const array = cookieHeaderValue?.split(';')
-  const accesToken = array?.find(
+  const accessToken = array?.find(
     (element) => element.includes('access_token')
   )?.split('=')[1]
   const refreshToken = array?.find(
     (element) => element.includes('refresh_token')
   )?.split('=')[1]
 
-  console.log('acces', accesToken)
-  console.log('refresh', refreshToken)
+  console.log('accessToken', accessToken)
 
-  // if (typeof authHeaderValue === 'undefined') {
-  //   throw createError({ statusCode: 403, statusMessage: 'Need to pass valid Bearer-authorization header to access this endpoint' })
-  // }
+  if (accessToken === undefined) {
+    return createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden',
+      message: '1001',
+    })
+  }
 
-  // const extractedToken = extractToken(authHeaderValue)
-
-  // try {
-  //   return jwt.verify(extractedToken, SECRET)
-  // } catch (error) {
-  //   console.error('Login failed. Here\'s the raw error:', error)
-  //   throw createError({ statusCode: 403, statusMessage: 'You must be logged in to use this endpoint' })
-  // }
-}
-
-export default defineEventHandler(async (event) => {
   try {
-    const student = ensureAuth(event)
+    const decodedAccessToken = jwt.verify(accessToken, SECRET)
+    console.log('decodedAccessToken', decodedAccessToken)
+    const studentId = decodedAccessToken.studentId
+    const student = await getStudentById(studentId)
     return {
       student: student,
     }
   } catch (error) {
-    console.log(error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error',
+    return createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden',
+      message: '1002',
     })
   }
 })

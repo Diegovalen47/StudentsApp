@@ -68,10 +68,7 @@ async function loginWithCredentials() {
     try {
       const response = await axios.post(
         '/api/auth/login',
-        // formData.value
-        {
-          userOrEmail: "jonh_doe23",
-        }
+        formData.value
       )
       console.log('axiosResponse', response)
       Alert.fire({
