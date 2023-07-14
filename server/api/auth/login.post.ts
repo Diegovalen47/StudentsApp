@@ -2,12 +2,17 @@
 import jwt from 'jsonwebtoken'
 import { Prisma } from '@prisma/client'
 import { getStudentByEmail, getStudentByUserName } from "@/server/controllers/student";
+import { comparePassword } from "@/models/Student";
+import { serialize } from "cookie";
+import { sensitiveHeaders } from 'http2';
 
 const SECRET = process.env.AUTH_SECRET as string
 
 export default defineEventHandler(async (event) => {
   try {
+
     const { userOrEmail, password } = await readBody(event)
+
     if(userOrEmail === undefined) {
       throw createError({
         statusCode: 500,
@@ -20,7 +25,9 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Internal Server Error',
       })
     }
+
     let student = undefined
+
     if (/.+@.+\..+/.test(userOrEmail)) {
       console.log('Email')
       student = await getStudentByEmail(userOrEmail)
@@ -28,7 +35,15 @@ export default defineEventHandler(async (event) => {
       console.log('Username')
       student = await getStudentByUserName(userOrEmail)
     }
-    if (student === null || student.password !== password) {
+
+    if (student?.password === null) {
+      throw createError({ 
+        statusCode: 400, 
+        statusMessage: 'Parece que tu cuenta no fue creada por medio de un usuario y contraseña, por favor intenta con Google.' 
+      })
+    }
+
+    if (student === null || !comparePassword(password, student.password)) {
       throw createError({ 
         statusCode: 400, 
         statusMessage: 'Invalid credentials, please try again.' 
@@ -55,12 +70,61 @@ export default defineEventHandler(async (event) => {
       }
     )
 
+    const serializedAccessToken = serialize('access_token', accessToken, {
+      httpOnly: false,
+      secure: false,
+      sameSite: 'strict',
+      maxAge: 60*5,
+      path: '/'
+    })
+
+    const serializedAccessExpTimestamp = serialize('access_exp_timestamp', (Date.now() + 60*5*1000).toString(), {
+      httpOnly: false,
+      secure: false,
+      sameSite: 'strict',
+      maxAge: 60*5,
+      path: '/'
+    })
+
+    const serializedRefreshToken = serialize('refresh_token', refreshToken, {
+      httpOnly: false,
+      secure: false,
+      sameSite: 'strict',
+      maxAge: 60*60*24,
+      path: '/'
+    })
+
+    const serializedRefreshExpTimestamp = serialize('refresh_exp_timestamp', (Date.now() + 60*60*24*1000).toString(), {
+      httpOnly: false,
+      secure: false,
+      sameSite: 'strict',
+      maxAge: 60*60*24,
+      path: '/'
+    })
+
+    const record: Record<string, string[]> = { 
+      "Set-Cookie" : [
+        serializedAccessToken, 
+        serializedRefreshToken,
+        serializedAccessExpTimestamp,
+        serializedRefreshExpTimestamp
+      ] 
+    }
+
+    setHeaders(event, record)
+
     return {
       token: {
         accessToken: accessToken,
         refreshToken: refreshToken
       },
-      student: student,
+      student: {
+        studentId: student.studentId,
+        userName: student.userName,
+        name: student.name,
+        lastName: student.lastName,
+        email: student.email,
+      },
     }
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {

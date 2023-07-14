@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   },
   modules: [
     '@pinia/nuxt',
-    '@sidebase/nuxt-auth'
+    '@pinia-plugin-persistedstate/nuxt',
   ],
   runtimeConfig: {
     public: {
@@ -24,32 +24,10 @@ export default defineNuxtConfig({
       serverBaseURL: process.env.SERVER_BASE_URL
     }
   },
-  auth: {
-    baseURL: '/api/auth',
-    provider: {
-      type: 'local',
-      endpoints: {
-        signIn: { path: '/login', method: 'post' },
-        signOut: { path: '/logout', method: 'post' },
-        signUp: { path: '/register', method: 'post' },
-        getSession: { path: '/student', method: 'get' }
-      },
-      pages: {
-        login: '/login'
-      },
-      token: {
-        signInResponseTokenPointer: '/token/accessToken',
-        maxAgeInSeconds: 60*5 // 5 minutes
-      },
-    },
-    session: {
-      enableRefreshPeriodically: false,
-      enableRefreshOnWindowFocus: false,
-    },
-    // @ts-expect-error
-    origin: process.env.AUTH_ORIGIN,
-    globalAppMiddleware: true
-  },
+  plugins: [
+    '@/plugins/vuetify',
+    '@/plugins/axios',
+  ],
   css: [
     '@/assets/css/global.scss',
     'vuetify/lib/styles/main.sass',
@@ -64,5 +42,5 @@ export default defineNuxtConfig({
       'defineStore', // import { defineStore } from 'pinia'
       ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
     ],
-  }
+  },
 })

@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   if (!student) {
     const notFoundError = createError({
       statusCode: 404,
-      statusMessage: 'Student not found ',
+      statusMessage: 'Student not found',
     })
     sendError(event, notFoundError)
   }

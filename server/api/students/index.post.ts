@@ -1,7 +1,7 @@
 import { createStudent } from "@/server/controllers/student";
 import { Prisma } from '@prisma/client'
 import { validValue } from '@/utils/fieldsValidation'
-import Student from "@/models/Student";
+import { Student, encryptPassword } from "@/models/Student";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -26,13 +26,19 @@ export default defineEventHandler(async (event) => {
         student: null
       }
     }
+    let hashedPassword
+    if(password !== undefined || password !== null || password !== '') {
+      hashedPassword = encryptPassword(password)
+    } else {
+      hashedPassword = password
+    }
     const student: Student = {
       studentId: -1,
       name: name,
       email: email,
       userName: validValue(userName),
       lastName: validValue(lastName),
-      password: validValue(password),
+      password: validValue(hashedPassword),
     }
     console.log(student)
     const newStudent = await createStudent(student)

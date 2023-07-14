@@ -1,17 +1,8 @@
 <script lang="ts" setup>
 import ThemeSwitch from '@/components/layout/ThemeSwitch.vue';
 
-const { status, data, signIn, signOut } = useAuth()
-
-const loggedIn = computed(() => status.value === 'authenticated')
-
 async function handleSignOut() {
-  await signOut({ callbackUrl: '/' })
-}
-
-function showData() {
-  console.log('data', data.value)
-  console.log('status', status.value)
+  console.log('Cerrar sesion')
 }
 
 </script>
@@ -29,11 +20,10 @@ function showData() {
             to="/login"
             rounded
             class="text-capitalize"
-            v-if="!loggedIn"
           >
             Login
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             variant="flat"
             color="surface"
             @click="handleSignOut"
@@ -41,14 +31,6 @@ function showData() {
             v-else
           >
             Log Out
-          </v-btn>
-          <!-- <v-btn
-            variant="flat"
-            color="surface"
-            @click="showData()"
-            rounded
-          >
-            Data
           </v-btn> -->
         </v-col>
         <v-col

@@ -37,6 +37,15 @@ const LightTheme: ThemeDefinition  = {
 }
 
 export default defineNuxtPlugin(nuxtApp => {
+  let actualTheme: string
+  const themeCookie = useCookie('theme')
+  if (themeCookie.value === undefined || themeCookie.value === null) {
+    actualTheme = 'LightTheme'
+  }
+  else {
+    actualTheme = themeCookie.value
+  }
+  
   const vuetify = createVuetify({
     defaults: {
       VCard: {
@@ -57,7 +66,7 @@ export default defineNuxtPlugin(nuxtApp => {
       }
     },
     theme: {
-      defaultTheme: 'LightTheme',
+      defaultTheme: actualTheme,
       themes: {
         DarkTheme,
         LightTheme

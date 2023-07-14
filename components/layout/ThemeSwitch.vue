@@ -4,14 +4,24 @@ import { useTheme } from "vuetify";
 
 const theme = useTheme()
 const isDarkMode = ref<boolean>(false)
+const themeCookie = useCookie('theme')
+
+onMounted(() => {
+  if (themeCookie.value) {
+    theme.global.name.value = themeCookie.value
+    isDarkMode.value = themeCookie.value === 'DarkTheme'
+  }
+})
 
 function toggleTheme() {
   if (theme.global.current.value.dark) {
     theme.global.name.value = 'LightTheme'
     isDarkMode.value = false
+    themeCookie.value = 'LightTheme'
   } else {
     theme.global.name.value = 'DarkTheme'
     isDarkMode.value = true
+    themeCookie.value = 'DarkTheme'
   }
 }
 

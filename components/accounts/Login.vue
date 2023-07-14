@@ -8,10 +8,10 @@ import useFormValidator from '@/composables/useFormValidator'
 import useInputRules from '@/composables/useInputRules'
 
 const display = useDisplay()
-const { status, signIn } = useAuth()
 const accountsStore = useAccountsStore()
 const inputRules = useInputRules()
 const { Alert } = useSwal();
+const axios = useNuxtApp().$axios;
 
 const formData = ref<any>({
   userOrEmail: '',
@@ -66,22 +66,18 @@ async function loginWithCredentials() {
   const isValid = await validateForm()
   if(isValid) {
     try {
-      const response = await signIn({ 
-        userOrEmail: formData.value.userOrEmail, 
-        password: formData.value.password
-      },
-      { 
-        callbackUrl: '/dashboard' 
-      })
-      console.log(response)
+      const response = await axios.post(
+        '/api/auth/login',
+        formData.value
+      )
+      console.log('axiosResponse', response)
       Alert.fire({
         title: 'Success',
         toast: true,
         position: 'top-end',
-        text: 'Logged in successfully',
+        text: `${response.data.student.name} logged in successfully`,
         icon: 'success',
-        confirmButtonText: 'Cool',
-        allowOutsideClick: false,
+        confirmButtonText: 'Cool'
       })
     } catch (error) {
       Alert.fire({
@@ -95,7 +91,7 @@ async function loginWithCredentials() {
   }
 }
 async function loginWithGoogle() {
-  await signIn( { provider: 'google' } )
+  console.log('Iniciar sesion con google')
 }
 
 </script>
@@ -122,6 +118,7 @@ async function loginWithGoogle() {
           :class="userOrEmailValidator? '' : 'shake'"
           variant="underlined"
           :rules="usernameOrEmailRules"
+          @keyup.enter="loginWithCredentials()"
         ></v-text-field>
       </v-col>
     </v-row>
@@ -161,6 +158,7 @@ async function loginWithGoogle() {
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :type="showPassword ? 'text' : 'password'"
           @click:append="showPassword = !showPassword"
+          @keyup.enter="loginWithCredentials()"
         ></v-text-field>
       </v-col>
     </v-row>
