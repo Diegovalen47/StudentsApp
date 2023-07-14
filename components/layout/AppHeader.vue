@@ -1,8 +1,21 @@
 <script lang="ts" setup>
 import ThemeSwitch from '@/components/layout/ThemeSwitch.vue';
 
+const axios = useNuxtApp().$axios;
+
 async function handleSignOut() {
   console.log('Cerrar sesion')
+}
+
+async function handleData() {
+  try {
+    const cookie = useCookie('refresh_token')
+    console.log(cookie.value)
+    const response = await axios.get('/api/auth/student')
+    console.log(response)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 </script>
@@ -22,6 +35,14 @@ async function handleSignOut() {
             class="text-capitalize"
           >
             Login
+          </v-btn>
+          <v-btn
+            variant="flat"
+            color="surface"
+            @click="handleData"
+            rounded
+          >
+            Data
           </v-btn>
           <!-- <v-btn
             variant="flat"

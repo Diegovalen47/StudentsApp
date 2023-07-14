@@ -68,7 +68,10 @@ async function loginWithCredentials() {
     try {
       const response = await axios.post(
         '/api/auth/login',
-        formData.value
+        // formData.value
+        {
+          userOrEmail: "jonh_doe23",
+        }
       )
       console.log('axiosResponse', response)
       Alert.fire({
@@ -79,10 +82,12 @@ async function loginWithCredentials() {
         icon: 'success',
         confirmButtonText: 'Cool'
       })
+      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token.accessToken}`
+      navigateTo('/dashboard')
     } catch (error) {
       Alert.fire({
-        title: 'Error',
-        text: `Invalid credentials, try again`,
+        title: (error as any).response.data.statusMessage,
+        text: (error as any).response.data.message,
         icon: 'error',
         confirmButtonText: 'Cool',
         allowOutsideClick: true,

@@ -4,49 +4,49 @@ import { Prisma } from '@prisma/client'
 import { getStudentByEmail, getStudentByUserName } from "@/server/controllers/student";
 import { comparePassword } from "@/models/Student";
 import { serialize } from "cookie";
-import { sensitiveHeaders } from 'http2';
+import { z, ZodError } from "zod";
+import { Student } from "@/models/Student";
 
 const SECRET = process.env.AUTH_SECRET as string
 
 export default defineEventHandler(async (event) => {
+
+  const BodyStructure = z
+    .object({
+      userOrEmail: z.string({ 
+        required_error: "User or Email is required", 
+        invalid_type_error: "User or Email must be a string"
+      }),
+      password: z.string({ 
+        required_error: "Password is required" 
+      }),
+    })
+    .strict()
+  const Email = z.string().email()
+
   try {
 
-    const { userOrEmail, password } = await readBody(event)
+    const body = await readBody(event)
+    const { userOrEmail, password } = BodyStructure.parse(body)
 
-    if(userOrEmail === undefined) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: 'Internal Server Error',
-      })
-    }
-    if(password === undefined) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: 'Internal Server Error',
-      })
-    }
-
-    let student = undefined
-
-    if (/.+@.+\..+/.test(userOrEmail)) {
-      console.log('Email')
-      student = await getStudentByEmail(userOrEmail)
-    } else {
-      console.log('Username')
-      student = await getStudentByUserName(userOrEmail)
-    }
+    const isEmail = Email.safeParse(userOrEmail)
+    const student: Student | null = isEmail.success 
+      ? await getStudentByEmail(userOrEmail) 
+      : await getStudentByUserName(userOrEmail)
 
     if (student?.password === null) {
-      throw createError({ 
-        statusCode: 400, 
-        statusMessage: 'Parece que tu cuenta no fue creada por medio de un usuario y contraseña, por favor intenta con Google.' 
+      return createError({
+        statusCode: 400,
+        statusMessage: `Bad Request`,
+        message: 'Your account has been created with Google, login with than option please',
       })
     }
 
     if (student === null || !comparePassword(password, student.password)) {
-      throw createError({ 
-        statusCode: 400, 
-        statusMessage: 'Invalid credentials, please try again.' 
+      return createError({
+        statusCode: 401,
+        statusMessage: `Unauthorized`,
+        message: 'Invalid Credentials, please try again.',
       })
     }
 
@@ -62,7 +62,7 @@ export default defineEventHandler(async (event) => {
 
     const refreshToken = jwt.sign(
       { 
-        studentId: student.studentId 
+        studentId: student.studentId,
       }, 
       SECRET, 
       { 
@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
     )
 
     const serializedAccessToken = serialize('access_token', accessToken, {
-      httpOnly: false,
+      httpOnly: true,
       secure: false,
       sameSite: 'strict',
       maxAge: 60*5,
@@ -87,7 +87,7 @@ export default defineEventHandler(async (event) => {
     })
 
     const serializedRefreshToken = serialize('refresh_token', refreshToken, {
-      httpOnly: false,
+      httpOnly: true,
       secure: false,
       sameSite: 'strict',
       maxAge: 60*60*24,
@@ -127,26 +127,23 @@ export default defineEventHandler(async (event) => {
       },
     }
   } catch (error) {
+
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       console.log('Prisma error')
-      return {
-        token: null,
-        error: true,
-        message: `${error.code}: ${error.message}}`,
-        student: null
-      }
-    }
-    if((error as any).statusCode === 400) {
-      throw createError({ 
-        statusCode: 400, 
-        statusMessage: 'Invalid credentials, please try again.',
-        name: 'InvalidCredentials'
+      return createError({
+        statusCode: 500,
+        statusMessage: `Internal Server Error`,
+        message: 'Prisma error',
       })
     }
-    console.log(error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error',
-    })
+
+    if (error instanceof ZodError) {
+      console.log('Zod error fasfsdf', error.errors[0].message)
+      return createError({
+        statusCode: 400,
+        statusMessage: `Bad Request`,
+        message: error.errors[0].message,
+      })
+    }
   }
 })

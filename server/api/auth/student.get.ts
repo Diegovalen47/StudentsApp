@@ -11,19 +11,33 @@ const extractToken = (authHeaderValue: string) => {
 }
 
 const ensureAuth = (event: H3Event) => {
-  const authHeaderValue = getRequestHeader(event, 'authorization')
-  if (typeof authHeaderValue === 'undefined') {
-    throw createError({ statusCode: 403, statusMessage: 'Need to pass valid Bearer-authorization header to access this endpoint' })
-  }
 
-  const extractedToken = extractToken(authHeaderValue)
+  const cookieHeaderValue = getRequestHeader(event, 'Cookie')
+  const authHeaderValue = getRequestHeader(event, 'Authorization')
+  console.log('auth header', authHeaderValue)
+  const array = cookieHeaderValue?.split(';')
+  const accesToken = array?.find(
+    (element) => element.includes('access_token')
+  )?.split('=')[1]
+  const refreshToken = array?.find(
+    (element) => element.includes('refresh_token')
+  )?.split('=')[1]
 
-  try {
-    return jwt.verify(extractedToken, SECRET)
-  } catch (error) {
-    console.error('Login failed. Here\'s the raw error:', error)
-    throw createError({ statusCode: 403, statusMessage: 'You must be logged in to use this endpoint' })
-  }
+  console.log('acces', accesToken)
+  console.log('refresh', refreshToken)
+
+  // if (typeof authHeaderValue === 'undefined') {
+  //   throw createError({ statusCode: 403, statusMessage: 'Need to pass valid Bearer-authorization header to access this endpoint' })
+  // }
+
+  // const extractedToken = extractToken(authHeaderValue)
+
+  // try {
+  //   return jwt.verify(extractedToken, SECRET)
+  // } catch (error) {
+  //   console.error('Login failed. Here\'s the raw error:', error)
+  //   throw createError({ statusCode: 403, statusMessage: 'You must be logged in to use this endpoint' })
+  // }
 }
 
 export default defineEventHandler(async (event) => {
