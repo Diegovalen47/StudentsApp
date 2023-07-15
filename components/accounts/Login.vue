@@ -4,11 +4,13 @@ import ForgotPasswordModal from '@/components/accounts/ForgotPasswordModal.vue';
 import { useDisplay } from "vuetify";
 import { useSwal } from '@/composables/useSwal'
 import { useAccountsStore } from '@/store/accounts'
+import { useStudentsStore } from '@/store/student';  
 import useFormValidator from '@/composables/useFormValidator'
 import useInputRules from '@/composables/useInputRules'
 
 const display = useDisplay()
 const accountsStore = useAccountsStore()
+const studentsStore = useStudentsStore();
 const inputRules = useInputRules()
 const { Alert } = useSwal();
 const axios = useNuxtApp().$axios;
@@ -70,7 +72,7 @@ async function loginWithCredentials() {
         '/api/auth/login',
         formData.value
       )
-      console.log('axiosResponse', response)
+      console.log('login response', response)
       Alert.fire({
         title: 'Success',
         toast: true,
@@ -79,7 +81,6 @@ async function loginWithCredentials() {
         icon: 'success',
         confirmButtonText: 'Cool'
       })
-      axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token.accessToken}`
       navigateTo('/dashboard')
     } catch (error) {
       Alert.fire({

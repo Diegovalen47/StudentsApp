@@ -44,8 +44,8 @@ export default defineEventHandler(async (event) => {
 
     if (student === null || !comparePassword(password, student.password)) {
       return createError({
-        statusCode: 401,
-        statusMessage: `Unauthorized`,
+        statusCode: 400,
+        statusMessage: `Bad Request`,
         message: 'Invalid Credentials, please try again.',
       })
     }
@@ -114,17 +114,7 @@ export default defineEventHandler(async (event) => {
     setHeaders(event, record)
 
     return {
-      token: {
-        accessToken: accessToken,
-        refreshToken: refreshToken
-      },
-      student: {
-        studentId: student.studentId,
-        userName: student.userName,
-        name: student.name,
-        lastName: student.lastName,
-        email: student.email,
-      },
+      student: student,
     }
   } catch (error) {
 

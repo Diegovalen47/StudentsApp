@@ -24,10 +24,6 @@ export default defineNuxtConfig({
       serverBaseURL: process.env.SERVER_BASE_URL
     }
   },
-  plugins: [
-    '@/plugins/vuetify',
-    '@/plugins/axios',
-  ],
   css: [
     '@/assets/css/global.scss',
     'vuetify/lib/styles/main.sass',

@@ -31,6 +31,7 @@ const showForgotPasswordModal = computed({
     accountsStore.showForgotPasswordModal = newValue
   }
 })
+
 async function sendEmail() {
   const isRecoveryFormValid = await validateForm()
   if (isRecoveryFormValid) {

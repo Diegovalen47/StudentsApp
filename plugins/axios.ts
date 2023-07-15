@@ -1,6 +1,10 @@
 import axios from "axios";
+import { useStudentsStore } from '@/store/student'; 
+
 export default defineNuxtPlugin((nuxtApp) => {
+
   const defaultUrl = process.env.BASE_URL
+  const studentsStore = useStudentsStore();
 
   let axiosInstance = axios.create({
     baseURL: defaultUrl,
@@ -10,17 +14,31 @@ export default defineNuxtPlugin((nuxtApp) => {
   });
 
   axiosInstance.interceptors.response.use((config) => {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
-    console.log('peticion 200', config)
+    console.log('config', config)
+    console.log('store', studentsStore.isLoggedIn)
+    const endPoint = config.config.url
+    if (endPoint === '/api/auth/login') {
+      studentsStore.student = config.data.student
+      studentsStore.isLoggedIn = true
+      return config;
+    }
+    if (endPoint === '/api/auth/logout') {
+      studentsStore.student = null
+      studentsStore.isLoggedIn = false
+      return config;
+    }
     return config;
   }, async function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
-    console.log('peticion 400', error)
-    if (error.response.data.message === '1001') {
-      console.log('Access Token Vencido')
-      await axiosInstance.get('/api/auth/refresh')
+    console.log(
+      error.response.data.statusCode, 
+      error.response.data.statusMessage, 
+      error.response.data.message
+    )
+    if (error.response.data.statusCode === 403) {
+      const errorCode = error.response.data.message.split(':')[0]
+      if (errorCode === '4031') {
+        return axiosInstance.get('/api/auth/refresh')
+      }
     }
     return Promise.reject(error);
   })

@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     return createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
-      message: '1003',
+      message: '4033: Refresh Token expired',
     })
   }
 
@@ -92,15 +92,14 @@ export default defineEventHandler(async (event) => {
     
     return {
       token: {
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken
+        message: 'Token refreshed',
       },
     }
   } catch (error) {
     return createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
-      message: 'Invalid access token',
+      message: '4034: Refresh Token not valid',
     })
   }
 })

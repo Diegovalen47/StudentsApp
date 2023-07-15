@@ -1,17 +1,51 @@
 <script lang="ts" setup>
 import ThemeSwitch from '@/components/layout/ThemeSwitch.vue';
+import { useSwal } from '@/composables/useSwal'
+import { useStudentsStore } from '@/store/student';  
 
 const axios = useNuxtApp().$axios;
+const studentsStore = useStudentsStore();
+const { Alert } = useSwal();
+
+const isLoggedIn = computed({
+  get() {
+    return studentsStore.isLoggedIn
+  },
+  set(newValue) {
+    studentsStore.isLoggedIn = newValue
+  }
+})
 
 async function handleSignOut() {
-  console.log('Cerrar sesion')
+  try {
+    await axios.post(
+      '/api/auth/logout'
+    )
+    Alert.fire({
+      title: 'Success',
+      toast: true,
+      position: 'top-end',
+      text: `Logged out successfully`,
+      icon: 'success',
+      confirmButtonText: 'Cool'
+    })
+    navigateTo('/')
+  } catch (error) {
+    Alert.fire({
+      title: (error as any).response.data.statusMessage,
+      text: (error as any).response.data.message,
+      icon: 'error',
+      confirmButtonText: 'Cool',
+      allowOutsideClick: true,
+    })
+  }
 }
 
 async function handleData() {
   try {
     const cookie = useCookie('refresh_token')
     console.log(cookie.value)
-    const response = await axios.get('/api/auth/student')
+    const response = await axios.get('/api/auth/access')
     console.log(response)
   } catch (error) {
     console.log(error)
@@ -33,9 +67,21 @@ async function handleData() {
             to="/login"
             rounded
             class="text-capitalize"
+            v-if="!isLoggedIn"
           >
             Login
           </v-btn>
+
+          <v-btn
+            variant="flat"
+            color="surface"
+            @click="handleSignOut"
+            rounded
+            v-else
+          >
+            Log Out
+          </v-btn>
+
           <v-btn
             variant="flat"
             color="surface"
@@ -44,15 +90,6 @@ async function handleData() {
           >
             Data
           </v-btn>
-          <!-- <v-btn
-            variant="flat"
-            color="surface"
-            @click="handleSignOut"
-            rounded
-            v-else
-          >
-            Log Out
-          </v-btn> -->
         </v-col>
         <v-col
           class="d-flex justify-center align-center"

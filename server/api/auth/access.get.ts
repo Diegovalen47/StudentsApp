@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
     return createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
-      message: '1001',
+      message: '4031: Access Token epired',
     })
   }
 
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     return createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
-      message: '1002',
+      message: '4032: Access Token not valid',
     })
   }
 })
