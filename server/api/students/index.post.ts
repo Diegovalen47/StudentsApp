@@ -1,7 +1,7 @@
-import { createStudent } from "@/server/controllers/student";
+import { createStudent } from '@/server/controllers/student'
 import { Prisma } from '@prisma/client'
 import { validValue } from '@/utils/fieldsValidation'
-import { Student, encryptPassword } from "@/models/Student";
+import { Student, encryptPassword } from '@/models/Student'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
       lastName: validValue(lastName),
       password: validValue(hashedPassword),
     }
-    console.log(student)
+
     const newStudent = await createStudent(student)
     return {
       message: 'Student created',
@@ -50,7 +50,6 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2002') {
-        console.log('User already exists')
         return {
           error: true,
           message: `${error.code}: Student already exists`,
@@ -58,7 +57,7 @@ export default defineEventHandler(async (event) => {
         }
       }
     }
-    console.log(error)
+    
     throw createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error',

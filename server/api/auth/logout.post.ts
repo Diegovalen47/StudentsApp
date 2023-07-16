@@ -1,4 +1,4 @@
-import { serialize } from "cookie";
+import { serialize } from 'cookie'
 
 export default defineEventHandler(async (event) => {
 
@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
   })
 
   const record: Record<string, string[]> = { 
-    "Set-Cookie" : [
+    'Set-Cookie' : [
       serializedAccessToken, 
       serializedRefreshToken,
       serializedAccessExpTimestamp,
@@ -49,4 +49,4 @@ export default defineEventHandler(async (event) => {
   return {
     message: 'Logout successful',
   }
-});
+})

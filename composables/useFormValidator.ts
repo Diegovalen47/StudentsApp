@@ -11,18 +11,18 @@ export default function useFormValidator(inputComponents: any) {
  * components are valid and false otherwise
  */
   async function validateForm(): Promise<boolean> {
-    let flagValid = true;
+    let flagValid = true
     for (const inputComponent of inputComponents) {
       const validation = await inputComponent.component.value.validate()
       const isValid = validation.length !== undefined
         ? validation.length === 0
         : validation.valid
       if (!isValid) {
-        flagValid = false;
+        flagValid = false
         inputComponent.validator.value = false
         setTimeout(() => {
           inputComponent.validator.value = true
-        }, 1000);
+        }, 1000)
       }
     }
     if (!flagValid) {
@@ -33,5 +33,5 @@ export default function useFormValidator(inputComponents: any) {
   
   return {
     validateForm
-  };
+  }
 }

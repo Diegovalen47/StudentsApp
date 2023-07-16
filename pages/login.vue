@@ -1,5 +1,9 @@
 <script lang="ts" setup>
-import Login from "@/components/accounts/Login.vue";
+import Login from '@/components/accounts/Login.vue'
+
+definePageMeta({
+  middleware: 'login'
+})
 
 </script>
 

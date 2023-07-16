@@ -7,7 +7,5 @@ export const useStudentsStore = defineStore('student', {
       student: null, 
     }
   },
-  persist: {
-    storage: persistedState.localStorage,
-  },
+  persist: true,
 })

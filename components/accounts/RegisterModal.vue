@@ -7,7 +7,7 @@ import { useSwal } from '@/composables/useSwal'
 
 const accountsStore = useAccountsStore()
 const inputRules = useInputRules()
-const { Alert } = useSwal();
+const { Alert } = useSwal()
 
 const formData = ref<any>({
   userName: null,

@@ -1,6 +1,6 @@
 // @ts-expect-error - this is a workaround for the CommonJS/ESM incompatibility
 import jwt from 'jsonwebtoken'
-import { serialize } from "cookie";
+import { serialize } from 'cookie'
 
 const SECRET = process.env.AUTH_SECRET as string
 
@@ -12,7 +12,6 @@ export default defineEventHandler(async (event) => {
     (element) => element.includes('refresh_token')
   )?.split('=')[1]
 
-  console.log('refreshToken', refreshToken)
 
   if (refreshToken === undefined) {
     return createError({
@@ -80,7 +79,7 @@ export default defineEventHandler(async (event) => {
     })
 
     const record: Record<string, string[]> = { 
-      "Set-Cookie" : [
+      'Set-Cookie' : [
         serializedAccessToken, 
         serializedRefreshToken,
         serializedAccessExpTimestamp,

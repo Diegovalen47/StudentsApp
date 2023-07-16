@@ -1,5 +1,5 @@
-import { updateStudent, getStudentById } from "@/server/controllers/student";
-import { Student } from "@/models/Student";
+import { updateStudent } from '@/server/controllers/student'
+import { Student } from '@/models/Student'
 
 export default defineEventHandler(async (event) => {
   const studentId = Number(event.context.params?.studentId)

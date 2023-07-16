@@ -1,6 +1,6 @@
 // @ts-expect-error - this is a workaround for the CommonJS/ESM incompatibility
 import jwt from 'jsonwebtoken'
-import { getStudentById } from "@/server/controllers/student";
+import { getStudentById } from '@/server/controllers/student'
 
 const SECRET = process.env.AUTH_SECRET as string
 
@@ -11,11 +11,6 @@ export default defineEventHandler(async (event) => {
   const accessToken = array?.find(
     (element) => element.includes('access_token')
   )?.split('=')[1]
-  const refreshToken = array?.find(
-    (element) => element.includes('refresh_token')
-  )?.split('=')[1]
-
-  console.log('accessToken', accessToken)
 
   if (accessToken === undefined) {
     return createError({
@@ -27,7 +22,6 @@ export default defineEventHandler(async (event) => {
 
   try {
     const decodedAccessToken = jwt.verify(accessToken, SECRET)
-    console.log('decodedAccessToken', decodedAccessToken)
     const studentId = decodedAccessToken.studentId
     const student = await getStudentById(studentId)
     return {

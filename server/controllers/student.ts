@@ -1,6 +1,6 @@
-import prisma from "@/server/controllers/prisma";
-import { Prisma, PrismaClient } from '@prisma/client'
-import { Student } from "@/models/Student";
+import prisma from '@/server/controllers/prisma'
+import { Prisma } from '@prisma/client'
+import { Student } from '@/models/Student'
 
 export async function getStudents(): Promise<Student[]> {
   try {

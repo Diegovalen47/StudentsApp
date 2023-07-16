@@ -1,4 +1,4 @@
-import { getStudentById } from "@/server/controllers/student";
+import { getStudentById } from '@/server/controllers/student'
 
 export default defineEventHandler(async (event) => {
   const studentId = Number(event.context.params?.studentId)

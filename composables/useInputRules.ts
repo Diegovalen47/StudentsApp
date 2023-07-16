@@ -46,5 +46,5 @@ export default function useInputRules() {
     noStartWithSpaces,
     noEndWithSpaces,
     noSpaces
-  };
+  }
 }

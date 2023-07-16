@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import { useTheme } from "vuetify";
+import { useTheme } from 'vuetify'
 
 const theme = useTheme()
 const isDarkMode = ref<boolean>(false)

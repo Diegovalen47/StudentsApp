@@ -1,19 +1,17 @@
 <script lang="ts" setup>
-import RegisterModal from '@/components/accounts/RegisterModal.vue';
-import ForgotPasswordModal from '@/components/accounts/ForgotPasswordModal.vue';
-import { useDisplay } from "vuetify";
+import RegisterModal from '@/components/accounts/RegisterModal.vue'
+import ForgotPasswordModal from '@/components/accounts/ForgotPasswordModal.vue'
+import { useDisplay } from 'vuetify'
 import { useSwal } from '@/composables/useSwal'
 import { useAccountsStore } from '@/store/accounts'
-import { useStudentsStore } from '@/store/student';  
 import useFormValidator from '@/composables/useFormValidator'
 import useInputRules from '@/composables/useInputRules'
 
 const display = useDisplay()
 const accountsStore = useAccountsStore()
-const studentsStore = useStudentsStore();
 const inputRules = useInputRules()
-const { Alert } = useSwal();
-const axios = useNuxtApp().$axios;
+const { Alert } = useSwal()
+const axios = useNuxtApp().$axios
 
 const formData = ref<any>({
   userOrEmail: '',
@@ -72,7 +70,6 @@ async function loginWithCredentials() {
         '/api/auth/login',
         formData.value
       )
-      console.log('login response', response)
       Alert.fire({
         title: 'Success',
         toast: true,
@@ -134,7 +131,7 @@ async function loginWithGoogle() {
             persistent
             width="512"
           >
-            <template v-slot:activator="{ props }">
+            <template v-slot:activator>
               <span 
                 style="
                   color: rgba(var(--v-theme-primary));
@@ -213,7 +210,7 @@ async function loginWithGoogle() {
           persistent
           width="683"
         >
-          <template v-slot:activator="{ props }">
+          <template v-slot:activator>
             <span 
               style="
                 color: rgba(var(--v-theme-primary));

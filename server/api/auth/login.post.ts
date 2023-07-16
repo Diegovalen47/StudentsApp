@@ -1,11 +1,11 @@
 // @ts-expect-error - this is a workaround for the CommonJS/ESM incompatibility
 import jwt from 'jsonwebtoken'
 import { Prisma } from '@prisma/client'
-import { getStudentByEmail, getStudentByUserName } from "@/server/controllers/student";
-import { comparePassword } from "@/models/Student";
-import { serialize } from "cookie";
-import { z, ZodError } from "zod";
-import { Student } from "@/models/Student";
+import { getStudentByEmail, getStudentByUserName } from '@/server/controllers/student'
+import { comparePassword } from '@/models/Student'
+import { serialize } from 'cookie'
+import { z, ZodError } from 'zod'
+import { Student } from '@/models/Student'
 
 const SECRET = process.env.AUTH_SECRET as string
 
@@ -14,11 +14,11 @@ export default defineEventHandler(async (event) => {
   const BodyStructure = z
     .object({
       userOrEmail: z.string({ 
-        required_error: "User or Email is required", 
-        invalid_type_error: "User or Email must be a string"
+        required_error: 'User or Email is required', 
+        invalid_type_error: 'User or Email must be a string'
       }),
       password: z.string({ 
-        required_error: "Password is required" 
+        required_error: 'Password is required' 
       }),
     })
     .strict()
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     if (student?.password === null) {
       return createError({
         statusCode: 400,
-        statusMessage: `Bad Request`,
+        statusMessage: 'Bad Request',
         message: 'Your account has been created with Google, login with than option please',
       })
     }
@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
     if (student === null || !comparePassword(password, student.password)) {
       return createError({
         statusCode: 400,
-        statusMessage: `Bad Request`,
+        statusMessage: 'Bad Request',
         message: 'Invalid Credentials, please try again.',
       })
     }
@@ -103,7 +103,7 @@ export default defineEventHandler(async (event) => {
     })
 
     const record: Record<string, string[]> = { 
-      "Set-Cookie" : [
+      'Set-Cookie' : [
         serializedAccessToken, 
         serializedRefreshToken,
         serializedAccessExpTimestamp,
@@ -119,19 +119,17 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
 
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      console.log('Prisma error')
       return createError({
         statusCode: 500,
-        statusMessage: `Internal Server Error`,
+        statusMessage: 'Internal Server Error',
         message: 'Prisma error',
       })
     }
 
     if (error instanceof ZodError) {
-      console.log('Zod error fasfsdf', error.errors[0].message)
       return createError({
         statusCode: 400,
-        statusMessage: `Bad Request`,
+        statusMessage: 'Bad Request',
         message: error.errors[0].message,
       })
     }

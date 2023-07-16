@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import ThemeSwitch from '@/components/layout/ThemeSwitch.vue';
+import ThemeSwitch from '@/components/layout/ThemeSwitch.vue'
 import { useSwal } from '@/composables/useSwal'
-import { useStudentsStore } from '@/store/student';  
+import { useStudentsStore } from '@/store/student'  
 
-const axios = useNuxtApp().$axios;
-const studentsStore = useStudentsStore();
-const { Alert } = useSwal();
+const axios = useNuxtApp().$axios
+const studentsStore = useStudentsStore()
+const { Alert } = useSwal()
 
 const isLoggedIn = computed({
   get() {
@@ -25,7 +25,7 @@ async function handleSignOut() {
       title: 'Success',
       toast: true,
       position: 'top-end',
-      text: `Logged out successfully`,
+      text: 'Logged out successfully',
       icon: 'success',
       confirmButtonText: 'Cool'
     })
@@ -38,17 +38,6 @@ async function handleSignOut() {
       confirmButtonText: 'Cool',
       allowOutsideClick: true,
     })
-  }
-}
-
-async function handleData() {
-  try {
-    const cookie = useCookie('refresh_token')
-    console.log(cookie.value)
-    const response = await axios.get('/api/auth/access')
-    console.log(response)
-  } catch (error) {
-    console.log(error)
   }
 }
 
@@ -71,7 +60,6 @@ async function handleData() {
           >
             Login
           </v-btn>
-
           <v-btn
             variant="flat"
             color="surface"
@@ -80,15 +68,6 @@ async function handleData() {
             v-else
           >
             Log Out
-          </v-btn>
-
-          <v-btn
-            variant="flat"
-            color="surface"
-            @click="handleData"
-            rounded
-          >
-            Data
           </v-btn>
         </v-col>
         <v-col
