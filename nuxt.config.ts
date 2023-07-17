@@ -15,6 +15,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       baseURL: process.env.BASE_URL,
+      // If number is changed, change the comment too.
+      accessTokenTimeoutInSeconds: 60 * 5, // 5 minutes
+      refreshTokenTimeoutInSeconds: 60 * 60, // 1 hour
     },
     private: {
       serverBaseURL: process.env.SERVER_BASE_URL,

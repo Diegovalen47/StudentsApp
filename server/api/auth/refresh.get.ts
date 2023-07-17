@@ -3,6 +3,11 @@ import jwt from 'jsonwebtoken'
 import { serialize } from 'cookie'
 
 const SECRET = process.env.AUTH_SECRET as string
+const runtimeConfig = useRuntimeConfig()
+const accessTokenTimeoutInSeconds =
+  runtimeConfig.public.accessTokenTimeoutInSeconds
+const refreshTokenTimeoutInSeconds =
+  runtimeConfig.public.refreshTokenTimeoutInSeconds
 
 export default defineEventHandler((event) => {
   const cookieHeaderValue = getRequestHeader(event, 'Cookie')
@@ -29,7 +34,7 @@ export default defineEventHandler((event) => {
       },
       SECRET,
       {
-        expiresIn: 60 * 5, // 5 minutes
+        expiresIn: accessTokenTimeoutInSeconds, // 5 minutes
       }
     )
 
@@ -39,7 +44,7 @@ export default defineEventHandler((event) => {
       },
       SECRET,
       {
-        expiresIn: 60 * 60 * 24, // 24 hours
+        expiresIn: refreshTokenTimeoutInSeconds, // 24 hours
       }
     )
 
@@ -47,18 +52,18 @@ export default defineEventHandler((event) => {
       httpOnly: true,
       secure: false,
       sameSite: 'strict',
-      maxAge: 60 * 5,
+      maxAge: accessTokenTimeoutInSeconds,
       path: '/',
     })
 
     const serializedAccessExpTimestamp = serialize(
       'access_exp_timestamp',
-      (Date.now() + 60 * 5 * 1000).toString(),
+      (Date.now() + accessTokenTimeoutInSeconds * 1000).toString(),
       {
         httpOnly: false,
         secure: false,
         sameSite: 'strict',
-        maxAge: 60 * 5,
+        maxAge: accessTokenTimeoutInSeconds,
         path: '/',
       }
     )
@@ -67,18 +72,18 @@ export default defineEventHandler((event) => {
       httpOnly: true,
       secure: false,
       sameSite: 'strict',
-      maxAge: 60 * 60 * 24,
+      maxAge: refreshTokenTimeoutInSeconds,
       path: '/',
     })
 
     const serializedRefreshExpTimestamp = serialize(
       'refresh_exp_timestamp',
-      (Date.now() + 60 * 60 * 24 * 1000).toString(),
+      (Date.now() + refreshTokenTimeoutInSeconds * 1000).toString(),
       {
         httpOnly: false,
         secure: false,
         sameSite: 'strict',
-        maxAge: 60 * 60 * 24,
+        maxAge: refreshTokenTimeoutInSeconds,
         path: '/',
       }
     )

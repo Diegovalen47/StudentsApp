@@ -27,11 +27,16 @@ export default defineNuxtPlugin(() => {
       }
       return config
     },
-    function (error) {
+    (error) => {
       if (error.response.data.statusCode === 403) {
         const errorCode = error.response.data.message.split(':')[0]
         if (errorCode === '4031') {
           return axiosInstance.get('/api/auth/refresh')
+        }
+        if (errorCode === '4033') {
+          studentsStore.student = null
+          studentsStore.isLoggedIn = false
+          return axiosInstance.post('/api/auth/logout')
         }
       }
       return Promise.reject(error)
