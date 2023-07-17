@@ -2,11 +2,11 @@ import { hashSync, compareSync } from 'bcrypt'
 
 export type Student = {
   studentId: number
-  userName: string | null
+  userName?: string | null
   name: string
-  lastName: string | null
+  lastName?: string | null
   email: string
-  password: string | null
+  password?: string | null
 }
 
 export function encryptPassword(password: string): string {

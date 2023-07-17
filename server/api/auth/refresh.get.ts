@@ -34,7 +34,7 @@ export default defineEventHandler((event) => {
       },
       SECRET,
       {
-        expiresIn: accessTokenTimeoutInSeconds, // 5 minutes
+        expiresIn: accessTokenTimeoutInSeconds,
       }
     )
 
@@ -44,7 +44,7 @@ export default defineEventHandler((event) => {
       },
       SECRET,
       {
-        expiresIn: refreshTokenTimeoutInSeconds, // 24 hours
+        expiresIn: refreshTokenTimeoutInSeconds,
       }
     )
 
@@ -55,7 +55,6 @@ export default defineEventHandler((event) => {
       maxAge: accessTokenTimeoutInSeconds,
       path: '/',
     })
-
     const serializedAccessExpTimestamp = serialize(
       'access_exp_timestamp',
       (Date.now() + accessTokenTimeoutInSeconds * 1000).toString(),
@@ -67,7 +66,6 @@ export default defineEventHandler((event) => {
         path: '/',
       }
     )
-
     const serializedRefreshToken = serialize('refresh_token', newRefreshToken, {
       httpOnly: true,
       secure: false,
@@ -75,7 +73,6 @@ export default defineEventHandler((event) => {
       maxAge: refreshTokenTimeoutInSeconds,
       path: '/',
     })
-
     const serializedRefreshExpTimestamp = serialize(
       'refresh_exp_timestamp',
       (Date.now() + refreshTokenTimeoutInSeconds * 1000).toString(),

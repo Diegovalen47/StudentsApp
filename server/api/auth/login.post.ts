@@ -15,21 +15,20 @@ const accessTokenTimeoutInSeconds =
   runtimeConfig.public.accessTokenTimeoutInSeconds
 const refreshTokenTimeoutInSeconds =
   runtimeConfig.public.refreshTokenTimeoutInSeconds
+const BodyStructure = z
+  .object({
+    userOrEmail: z.string({
+      required_error: 'User or Email is required',
+      invalid_type_error: 'User or Email must be a string',
+    }),
+    password: z.string({
+      required_error: 'Password is required',
+    }),
+  })
+  .strict()
+const Email = z.string().email()
 
 export default defineEventHandler(async (event) => {
-  const BodyStructure = z
-    .object({
-      userOrEmail: z.string({
-        required_error: 'User or Email is required',
-        invalid_type_error: 'User or Email must be a string',
-      }),
-      password: z.string({
-        required_error: 'Password is required',
-      }),
-    })
-    .strict()
-  const Email = z.string().email()
-
   try {
     const body = await readBody(event)
     const { userOrEmail, password } = BodyStructure.parse(body)
@@ -39,7 +38,7 @@ export default defineEventHandler(async (event) => {
       ? await getStudentByEmail(userOrEmail)
       : await getStudentByUserName(userOrEmail)
 
-    if (student?.password === null) {
+    if (student?.password === null || student?.password === undefined) {
       return createError({
         statusCode: 400,
         statusMessage: 'Bad Request',
@@ -83,7 +82,6 @@ export default defineEventHandler(async (event) => {
       maxAge: accessTokenTimeoutInSeconds,
       path: '/',
     })
-
     const serializedAccessExpTimestamp = serialize(
       'access_exp_timestamp',
       (Date.now() + accessTokenTimeoutInSeconds * 1000).toString(),
@@ -95,7 +93,6 @@ export default defineEventHandler(async (event) => {
         path: '/',
       }
     )
-
     const serializedRefreshToken = serialize('refresh_token', refreshToken, {
       httpOnly: true,
       secure: false,
@@ -103,7 +100,6 @@ export default defineEventHandler(async (event) => {
       maxAge: refreshTokenTimeoutInSeconds,
       path: '/',
     })
-
     const serializedRefreshExpTimestamp = serialize(
       'refresh_exp_timestamp',
       (Date.now() + refreshTokenTimeoutInSeconds * 1000).toString(),
@@ -127,6 +123,8 @@ export default defineEventHandler(async (event) => {
 
     setHeaders(event, record)
 
+    delete student.password
+
     return {
       student,
     }
@@ -135,7 +133,7 @@ export default defineEventHandler(async (event) => {
       return createError({
         statusCode: 500,
         statusMessage: 'Internal Server Error',
-        message: 'Prisma error',
+        message: `${error.code}: Prisma error`,
       })
     }
 
@@ -146,5 +144,11 @@ export default defineEventHandler(async (event) => {
         message: error.errors[0].message,
       })
     }
+
+    return createError({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: 'Generic Error',
+    })
   }
 })

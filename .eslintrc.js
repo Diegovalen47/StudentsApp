@@ -12,5 +12,16 @@ module.exports = {
   },
   extends: ['@nuxtjs/eslint-config-typescript', 'plugin:prettier/recommended'],
   plugins: [],
-  rules: {},
+  rules: {
+    indent: ['error', 2],
+    quotes: ['error', 'single'],
+    semi: ['error', 'never'],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
+    'vue/no-multiple-template-root': 0,
+  },
 }

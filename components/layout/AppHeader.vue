@@ -38,6 +38,25 @@ async function handleSignOut() {
     })
   }
 }
+async function data() {
+  try {
+    await axios.get('/api/students')
+    Alert.fire({
+      title: 'Success',
+      text: 'Test button',
+      icon: 'success',
+      confirmButtonText: 'Cool',
+    })
+  } catch (error) {
+    Alert.fire({
+      title: (error as any).response.data.statusMessage,
+      text: (error as any).response.data.message,
+      icon: 'error',
+      confirmButtonText: 'Cool',
+      allowOutsideClick: true,
+    })
+  }
+}
 </script>
 
 <template>
@@ -63,6 +82,15 @@ async function handleSignOut() {
             @click="handleSignOut"
           >
             Log Out
+          </v-btn>
+          <v-btn
+            class="mx-4"
+            variant="flat"
+            color="surface"
+            rounded
+            @click="data"
+          >
+            Data
           </v-btn>
         </v-col>
         <v-col class="d-flex justify-center align-center">

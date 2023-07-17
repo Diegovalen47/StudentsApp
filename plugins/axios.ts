@@ -12,6 +12,25 @@ export default defineNuxtPlugin(() => {
     },
   })
 
+  axiosInstance.interceptors.request.use(
+    async (config) => {
+      const endPoint = config.url
+      if (
+        endPoint !== '/api/auth/login' &&
+        endPoint !== '/api/auth/refresh' &&
+        endPoint !== '/api/auth/logout' &&
+        endPoint !== '/api/auth/access' &&
+        studentsStore.isLoggedIn === true
+      ) {
+        await axiosInstance.get('/api/auth/access')
+      }
+      return config
+    },
+    (error) => {
+      return Promise.reject(error)
+    }
+  )
+
   axiosInstance.interceptors.response.use(
     (config) => {
       const endPoint = config.config.url

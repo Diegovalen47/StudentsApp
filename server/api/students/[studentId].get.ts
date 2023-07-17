@@ -3,12 +3,13 @@ import { getStudentById } from '@/server/controllers/student'
 export default defineEventHandler(async (event) => {
   const studentId = Number(event.context.params?.studentId)
   const student = await getStudentById(studentId)
-  if (!student) {
-    const notFoundError = createError({
+  if (student === null) {
+    return createError({
       statusCode: 404,
-      statusMessage: 'Student not found',
+      statusMessage: 'Not Found',
+      message: '4041: Student not found',
     })
-    sendError(event, notFoundError)
   }
+  delete student.password
   return student
 })

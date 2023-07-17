@@ -7,6 +7,7 @@ import { useSwal } from '@/composables/useSwal'
 const accountsStore = useAccountsStore()
 const inputRules = useInputRules()
 const { Alert } = useSwal()
+const axios = useNuxtApp().$axios
 
 const formData = ref<any>({
   userName: null,
@@ -104,28 +105,26 @@ const showRegisterModal = computed({
 async function signUp() {
   const isValid = await RegisterValidator.validateForm()
   if (isValid) {
-    const { data } = await useFetch('/api/students', {
-      method: 'POST',
-      body: JSON.stringify(formData.value),
-    })
-    const dataObject: any = toRaw(data.value)
-    if (dataObject.error === false) {
+    try {
+      const response = await axios.post(
+        '/api/students/register',
+        formData.value
+      )
       showRegisterModal.value = false
       Alert.fire({
-        title: dataObject.message,
-        text: `${dataObject.student.name} registered successfully`,
+        title: 'Success',
+        text: `${response.data.student.name} registered successfully, login to continue`,
         icon: 'success',
         confirmButtonText: 'Cool',
         allowOutsideClick: true,
       })
-    } else {
+    } catch (error) {
       Alert.fire({
-        title: dataObject.message,
-        toast: true,
-        position: 'top-end',
-        text: 'Check your data and try again',
+        title: (error as any).response.data.statusMessage,
+        text: (error as any).response.data.message,
         icon: 'error',
         confirmButtonText: 'Cool',
+        allowOutsideClick: true,
       })
     }
   }
