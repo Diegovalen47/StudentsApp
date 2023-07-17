@@ -1,16 +1,5 @@
 export const useGlobalStore = defineStore('global', {
   state: () => ({
-    count: 0,
-    prisma: null,
+    drawer: false,
   }),
-  getters: {
-    doubleCount: (state): string => {
-      return `${state.count} Km`
-    },
-  },
-  actions: {
-    increment() {
-      this.count++
-    },
-  },
 })

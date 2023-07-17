@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@use "@/assets/css/colors.scss" as *;',
+          additionalData: '@use "@/assets/css/globals.scss" as *;',
         },
       },
     },
@@ -24,7 +24,7 @@ export default defineNuxtConfig({
     },
   },
   css: [
-    '@/assets/css/global.scss',
+    '@/assets/css/fonts.scss',
     'vuetify/lib/styles/main.sass',
     '@mdi/font/css/materialdesignicons.min.css',
   ],

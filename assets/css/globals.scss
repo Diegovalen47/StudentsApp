@@ -41,3 +41,26 @@ $br-max: 16px;
 .swal2-container {
   z-index: 10000;
 }
+
+@mixin gap-list {
+  @for $i from 0 through 12 {
+    .gap-#{$i} {
+      display: flex;
+      gap: #{$i * 4}px !important;
+    }
+  }
+}
+
+@include gap-list;
+
+* {
+  word-break: keep-all;
+}
+
+a {
+  color: inherit !important;
+  text-decoration: none !important;
+  &:hover {
+    text-decoration: underline !important;
+  }
+}

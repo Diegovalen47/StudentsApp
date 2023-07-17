@@ -46,20 +46,12 @@ const { validateForm } = useFormValidator([
 ])
 
 const showRegisterModal = computed({
-  get() {
-    return accountsStore.showRegisterModal
-  },
-  set(newValue) {
-    accountsStore.showRegisterModal = newValue
-  },
+  get: () => accountsStore.showRegisterModal,
+  set: (value) => (accountsStore.showRegisterModal = value),
 })
 const showForgotPasswordModal = computed({
-  get() {
-    return accountsStore.showForgotPasswordModal
-  },
-  set(newValue) {
-    accountsStore.showForgotPasswordModal = newValue
-  },
+  get: () => accountsStore.showForgotPasswordModal,
+  set: (value) => (accountsStore.showForgotPasswordModal = value),
 })
 
 async function loginWithCredentials() {

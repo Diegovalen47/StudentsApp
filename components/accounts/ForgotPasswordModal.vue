@@ -23,12 +23,8 @@ const emailRules = ref<Array<any>>([
   inputRules.emailValid,
 ])
 const showForgotPasswordModal = computed({
-  get() {
-    return accountsStore.showForgotPasswordModal
-  },
-  set(newValue) {
-    accountsStore.showForgotPasswordModal = newValue
-  },
+  get: () => accountsStore.showForgotPasswordModal,
+  set: (newValue) => (accountsStore.showForgotPasswordModal = newValue),
 })
 
 async function sendEmail() {

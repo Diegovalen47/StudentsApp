@@ -1,99 +1,27 @@
 <script lang="ts" setup>
+import { useDisplay } from 'vuetify'
 import ThemeSwitch from '@/components/layout/ThemeSwitch.vue'
-import { useSwal } from '@/composables/useSwal'
-import { useStudentsStore } from '@/store/student'
+import HeaderOptions from '@/components/layout/HeaderOptions.vue'
 
-const axios = useNuxtApp().$axios
-const studentsStore = useStudentsStore()
-const { Alert } = useSwal()
-
-const isLoggedIn = computed({
-  get() {
-    return studentsStore.isLoggedIn
-  },
-  set(newValue) {
-    studentsStore.isLoggedIn = newValue
-  },
-})
-
-async function handleSignOut() {
-  try {
-    await axios.post('/api/auth/logout')
-    Alert.fire({
-      title: 'Success',
-      toast: true,
-      position: 'top-end',
-      text: 'Logged out successfully',
-      icon: 'success',
-      confirmButtonText: 'Cool',
-    })
-    navigateTo('/')
-  } catch (error) {
-    Alert.fire({
-      title: (error as any).response.data.statusMessage,
-      text: (error as any).response.data.message,
-      icon: 'error',
-      confirmButtonText: 'Cool',
-      allowOutsideClick: true,
-    })
-  }
-}
-async function data() {
-  try {
-    await axios.get('/api/students')
-    Alert.fire({
-      title: 'Success',
-      text: 'Test button',
-      icon: 'success',
-      confirmButtonText: 'Cool',
-    })
-  } catch (error) {
-    Alert.fire({
-      title: (error as any).response.data.statusMessage,
-      text: (error as any).response.data.message,
-      icon: 'error',
-      confirmButtonText: 'Cool',
-      allowOutsideClick: true,
-    })
-  }
-}
+const display = useDisplay()
 </script>
 
 <template>
   <v-toolbar color="primary">
     <v-container fluid style="max-width: 1366px">
       <v-row class="d-flex justify-space-between">
-        <v-col class="d-flex justify-start">
-          <v-btn
-            v-if="!isLoggedIn"
-            variant="flat"
-            color="surface"
-            to="/login"
-            rounded
-            class="text-capitalize"
-          >
-            Login
-          </v-btn>
-          <v-btn
-            v-else
-            variant="flat"
-            color="surface"
-            rounded
-            @click="handleSignOut"
-          >
-            Log Out
-          </v-btn>
-          <v-btn
-            class="mx-4"
-            variant="flat"
-            color="surface"
-            rounded
-            @click="data"
-          >
-            Data
-          </v-btn>
+        <v-col
+          v-if="display.width.value >= 500"
+          class="d-flex justify-start align-center"
+        >
+          <ThemeSwitch />
         </v-col>
-        <v-col class="d-flex justify-center align-center">
+        <v-col
+          class="d-flex flex-row align-center"
+          :class="
+            display.width.value >= 500 ? 'justify-center' : 'justify-start'
+          "
+        >
           <NuxtLink
             to="/"
             style="text-decoration: none; color: rgba(var(--v-theme-surface))"
@@ -102,7 +30,7 @@ async function data() {
           </NuxtLink>
         </v-col>
         <v-col class="d-flex justify-end">
-          <ThemeSwitch />
+          <HeaderOptions />
         </v-col>
       </v-row>
     </v-container>

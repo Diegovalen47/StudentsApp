@@ -94,12 +94,8 @@ const GoogleRegisterValidator = useFormValidator([
 ])
 
 const showRegisterModal = computed({
-  get() {
-    return accountsStore.showRegisterModal
-  },
-  set(newValue) {
-    accountsStore.showRegisterModal = newValue
-  },
+  get: () => accountsStore.showRegisterModal,
+  set: (value) => (accountsStore.showRegisterModal = value),
 })
 
 async function signUp() {
