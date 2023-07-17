@@ -7,7 +7,7 @@ import AppHeader from '@/components/layout/AppHeader.vue'
   <v-app>
     <AppHeader />
     <v-main>
-      <slot/>
+      <slot />
     </v-main>
     <AppFooter />
   </v-app>

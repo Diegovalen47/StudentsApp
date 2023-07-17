@@ -1,6 +1,6 @@
 export const useAccountsStore = defineStore('accounts', {
-  state: () => ({ 
+  state: () => ({
     showRegisterModal: false,
     showForgotPasswordModal: false,
-  })
+  }),
 })

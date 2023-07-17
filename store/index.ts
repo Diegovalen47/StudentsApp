@@ -1,7 +1,7 @@
 export const useGlobalStore = defineStore('global', {
-  state: () => ({ 
+  state: () => ({
     count: 0,
-    prisma: null, 
+    prisma: null,
   }),
   getters: {
     doubleCount: (state): string => {

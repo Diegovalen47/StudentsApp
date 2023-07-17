@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import { useAccountsStore } from '@/store/accounts'
 import useFormValidator from '@/composables/useFormValidator'
 import useInputRules from '@/composables/useInputRules'
@@ -10,10 +9,10 @@ const inputRules = useInputRules()
 const recoveryFormComponent = ref()
 const recoveryFormValidator = ref<boolean>(true)
 const { validateForm } = useFormValidator([
-  { 
-    component: recoveryFormComponent, 
-    validator: recoveryFormValidator
-  }
+  {
+    component: recoveryFormComponent,
+    validator: recoveryFormValidator,
+  },
 ])
 const email = ref<string>('')
 const emailRules = ref<Array<any>>([
@@ -21,7 +20,7 @@ const emailRules = ref<Array<any>>([
   inputRules.noOnlySpaces,
   inputRules.noStartWithSpaces,
   inputRules.noEndWithSpaces,
-  inputRules.emailValid
+  inputRules.emailValid,
 ])
 const showForgotPasswordModal = computed({
   get() {
@@ -29,7 +28,7 @@ const showForgotPasswordModal = computed({
   },
   set(newValue) {
     accountsStore.showForgotPasswordModal = newValue
-  }
+  },
 })
 
 async function sendEmail() {
@@ -40,8 +39,6 @@ async function sendEmail() {
     console.log('Form is not valid')
   }
 }
-
-
 </script>
 
 <template>
@@ -49,10 +46,9 @@ async function sendEmail() {
     <v-card-title class="d-flex justify-space-between">
       <h2>Change your password</h2>
       <div>
-        <v-icon
-          color="primary"
-          @click="showForgotPasswordModal = false"
-        >mdi-close</v-icon>
+        <v-icon color="primary" @click="showForgotPasswordModal = false"
+          >mdi-close</v-icon
+        >
       </div>
     </v-card-title>
     <v-card-text>
@@ -65,7 +61,7 @@ async function sendEmail() {
               label="Enter your email"
               placeholder="jonhdoe@mail.com"
               variant="underlined"
-              :class="recoveryFormValidator? '' : 'shake'"
+              :class="recoveryFormValidator ? '' : 'shake'"
               :rules="emailRules"
             ></v-text-field>
           </v-col>
@@ -74,9 +70,7 @@ async function sendEmail() {
     </v-card-text>
     <v-card-actions>
       <v-row>
-        <v-col 
-          class="d-flex justify-start"
-        >
+        <v-col class="d-flex justify-start">
           <v-btn
             color="primary"
             block
@@ -92,6 +86,4 @@ async function sendEmail() {
   </v-card>
 </template>
 
-<style lang="scss" scoped>
-  
-</style>
+<style lang="scss" scoped></style>

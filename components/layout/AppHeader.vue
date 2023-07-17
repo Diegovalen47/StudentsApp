@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import ThemeSwitch from '@/components/layout/ThemeSwitch.vue'
 import { useSwal } from '@/composables/useSwal'
-import { useStudentsStore } from '@/store/student'  
+import { useStudentsStore } from '@/store/student'
 
 const axios = useNuxtApp().$axios
 const studentsStore = useStudentsStore()
@@ -13,21 +13,19 @@ const isLoggedIn = computed({
   },
   set(newValue) {
     studentsStore.isLoggedIn = newValue
-  }
+  },
 })
 
 async function handleSignOut() {
   try {
-    await axios.post(
-      '/api/auth/logout'
-    )
+    await axios.post('/api/auth/logout')
     Alert.fire({
       title: 'Success',
       toast: true,
       position: 'top-end',
       text: 'Logged out successfully',
       icon: 'success',
-      confirmButtonText: 'Cool'
+      confirmButtonText: 'Cool',
     })
     navigateTo('/')
   } catch (error) {
@@ -40,56 +38,45 @@ async function handleSignOut() {
     })
   }
 }
-
 </script>
 
 <template>
   <v-toolbar color="primary">
     <v-container fluid style="max-width: 1366px">
       <v-row class="d-flex justify-space-between">
-        <v-col 
-          class="d-flex justify-start"
-        >
+        <v-col class="d-flex justify-start">
           <v-btn
+            v-if="!isLoggedIn"
             variant="flat"
             color="surface"
             to="/login"
             rounded
             class="text-capitalize"
-            v-if="!isLoggedIn"
           >
             Login
           </v-btn>
           <v-btn
+            v-else
             variant="flat"
             color="surface"
-            @click="handleSignOut"
             rounded
-            v-else
+            @click="handleSignOut"
           >
             Log Out
           </v-btn>
         </v-col>
-        <v-col
-          class="d-flex justify-center align-center"
-        >
-          <NuxtLink 
-            to="/" 
-            style="
-              text-decoration: none;
-              color: rgba(var(--v-theme-surface));
-            "
+        <v-col class="d-flex justify-center align-center">
+          <NuxtLink
+            to="/"
+            style="text-decoration: none; color: rgba(var(--v-theme-surface))"
           >
             <h2>StudentsApp</h2>
           </NuxtLink>
         </v-col>
-        <v-col
-          class="d-flex justify-end"
-        >
-          <ThemeSwitch/>
+        <v-col class="d-flex justify-end">
+          <ThemeSwitch />
         </v-col>
       </v-row>
     </v-container>
   </v-toolbar>
 </template>
-

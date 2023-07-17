@@ -4,14 +4,12 @@ import { serialize } from 'cookie'
 
 const SECRET = process.env.AUTH_SECRET as string
 
-export default defineEventHandler(async (event) => {
-
+export default defineEventHandler((event) => {
   const cookieHeaderValue = getRequestHeader(event, 'Cookie')
   const array = cookieHeaderValue?.split(';')
-  const refreshToken = array?.find(
-    (element) => element.includes('refresh_token')
-  )?.split('=')[1]
-
+  const refreshToken = array
+    ?.find((element) => element.includes('refresh_token'))
+    ?.split('=')[1]
 
   if (refreshToken === undefined) {
     return createError({
@@ -23,26 +21,25 @@ export default defineEventHandler(async (event) => {
 
   try {
     const decodedRefreshToken = jwt.verify(refreshToken, SECRET)
-    console.log('decodedRefresh', decodedRefreshToken)
     const studentId = decodedRefreshToken.studentId
 
     const newAccessToken = jwt.sign(
-      { 
-        studentId: studentId 
-      }, 
-      SECRET, 
-      { 
-        expiresIn: 60*5 // 5 minutes 
+      {
+        studentId,
+      },
+      SECRET,
+      {
+        expiresIn: 60 * 5, // 5 minutes
       }
     )
 
     const newRefreshToken = jwt.sign(
-      { 
-        studentId: studentId,
-      }, 
-      SECRET, 
-      { 
-        expiresIn: 60*60*24 // 24 hours 
+      {
+        studentId,
+      },
+      SECRET,
+      {
+        expiresIn: 60 * 60 * 24, // 24 hours
       }
     )
 
@@ -50,45 +47,53 @@ export default defineEventHandler(async (event) => {
       httpOnly: true,
       secure: false,
       sameSite: 'strict',
-      maxAge: 60*5,
-      path: '/'
+      maxAge: 60 * 5,
+      path: '/',
     })
 
-    const serializedAccessExpTimestamp = serialize('access_exp_timestamp', (Date.now() + 60*5*1000).toString(), {
-      httpOnly: false,
-      secure: false,
-      sameSite: 'strict',
-      maxAge: 60*5,
-      path: '/'
-    })
+    const serializedAccessExpTimestamp = serialize(
+      'access_exp_timestamp',
+      (Date.now() + 60 * 5 * 1000).toString(),
+      {
+        httpOnly: false,
+        secure: false,
+        sameSite: 'strict',
+        maxAge: 60 * 5,
+        path: '/',
+      }
+    )
 
     const serializedRefreshToken = serialize('refresh_token', newRefreshToken, {
       httpOnly: true,
       secure: false,
       sameSite: 'strict',
-      maxAge: 60*60*24,
-      path: '/'
+      maxAge: 60 * 60 * 24,
+      path: '/',
     })
 
-    const serializedRefreshExpTimestamp = serialize('refresh_exp_timestamp', (Date.now() + 60*60*24*1000).toString(), {
-      httpOnly: false,
-      secure: false,
-      sameSite: 'strict',
-      maxAge: 60*60*24,
-      path: '/'
-    })
+    const serializedRefreshExpTimestamp = serialize(
+      'refresh_exp_timestamp',
+      (Date.now() + 60 * 60 * 24 * 1000).toString(),
+      {
+        httpOnly: false,
+        secure: false,
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24,
+        path: '/',
+      }
+    )
 
-    const record: Record<string, string[]> = { 
-      'Set-Cookie' : [
-        serializedAccessToken, 
+    const record: Record<string, string[]> = {
+      'Set-Cookie': [
+        serializedAccessToken,
         serializedRefreshToken,
         serializedAccessExpTimestamp,
-        serializedRefreshExpTimestamp
-      ] 
+        serializedRefreshExpTimestamp,
+      ],
     }
 
     setHeaders(event, record)
-    
+
     return {
       token: {
         message: 'Token refreshed',

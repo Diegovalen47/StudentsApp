@@ -1,7 +1,7 @@
 <script lang="ts" setup>
+import { useDisplay } from 'vuetify'
 import RegisterModal from '@/components/accounts/RegisterModal.vue'
 import ForgotPasswordModal from '@/components/accounts/ForgotPasswordModal.vue'
-import { useDisplay } from 'vuetify'
 import { useSwal } from '@/composables/useSwal'
 import { useAccountsStore } from '@/store/accounts'
 import useFormValidator from '@/composables/useFormValidator'
@@ -15,7 +15,7 @@ const axios = useNuxtApp().$axios
 
 const formData = ref<any>({
   userOrEmail: '',
-  password: ''
+  password: '',
 })
 const showPassword = ref<boolean>(false)
 const usernameOrEmailRules = ref<Array<any>>([
@@ -23,7 +23,7 @@ const usernameOrEmailRules = ref<Array<any>>([
   inputRules.noOnlySpaces,
   inputRules.noStartWithSpaces,
   inputRules.noEndWithSpaces,
-  inputRules.noSpaces
+  inputRules.noSpaces,
 ])
 const passwordRules = ref<Array<any>>([
   inputRules.fieldRequired,
@@ -35,14 +35,14 @@ const userOrEmailValidator = ref<boolean>(true)
 const passwordComponent = ref()
 const passwordValidator = ref<boolean>(true)
 const { validateForm } = useFormValidator([
-  { 
-    component: userOrEmailComponent, 
-    validator: userOrEmailValidator
+  {
+    component: userOrEmailComponent,
+    validator: userOrEmailValidator,
   },
-  { 
+  {
     component: passwordComponent,
-    validator: passwordValidator 
-  }
+    validator: passwordValidator,
+  },
 ])
 
 const showRegisterModal = computed({
@@ -51,7 +51,7 @@ const showRegisterModal = computed({
   },
   set(newValue) {
     accountsStore.showRegisterModal = newValue
-  }
+  },
 })
 const showForgotPasswordModal = computed({
   get() {
@@ -59,24 +59,21 @@ const showForgotPasswordModal = computed({
   },
   set(newValue) {
     accountsStore.showForgotPasswordModal = newValue
-  }
+  },
 })
 
 async function loginWithCredentials() {
   const isValid = await validateForm()
-  if(isValid) {
+  if (isValid) {
     try {
-      const response = await axios.post(
-        '/api/auth/login',
-        formData.value
-      )
+      const response = await axios.post('/api/auth/login', formData.value)
       Alert.fire({
         title: 'Success',
         toast: true,
         position: 'top-end',
         text: `${response.data.student.name} logged in successfully`,
         icon: 'success',
-        confirmButtonText: 'Cool'
+        confirmButtonText: 'Cool',
       })
       navigateTo('/dashboard')
     } catch (error) {
@@ -90,16 +87,15 @@ async function loginWithCredentials() {
     }
   }
 }
-async function loginWithGoogle() {
+function loginWithGoogle() {
   console.log('Iniciar sesion con google')
 }
-
 </script>
 
 <template>
   <v-form>
     <v-row>
-      <v-col 
+      <v-col
         class="d-flex"
         :class="display.mdAndUp.value ? 'justify-start' : 'justify-center'"
       >
@@ -115,7 +111,7 @@ async function loginWithGoogle() {
           label="Enter your username or email"
           placeholder="jonh_doe23 / jonhdoe@mail.com"
           required
-          :class="userOrEmailValidator? '' : 'shake'"
+          :class="userOrEmailValidator ? '' : 'shake'"
           variant="underlined"
           :rules="usernameOrEmailRules"
           @keyup.enter="loginWithCredentials()"
@@ -126,24 +122,17 @@ async function loginWithGoogle() {
       <v-col class="d-flex flex-column">
         <div class="d-flex flex-row justify-space-between">
           <h3>Password</h3>
-          <v-dialog
-            v-model="showForgotPasswordModal"
-            persistent
-            width="512"
-          >
-            <template v-slot:activator>
-              <span 
-                style="
-                  color: rgba(var(--v-theme-primary));
-                  cursor: pointer;
-                " 
+          <v-dialog v-model="showForgotPasswordModal" persistent width="512">
+            <template #activator>
+              <span
+                style="color: rgba(var(--v-theme-primary)); cursor: pointer"
                 class="text-right"
                 @click="showForgotPasswordModal = true"
               >
                 Forgot your password?
               </span>
             </template>
-            <ForgotPasswordModal/>
+            <ForgotPasswordModal />
           </v-dialog>
         </div>
         <v-text-field
@@ -152,7 +141,7 @@ async function loginWithGoogle() {
           label="Enter your password"
           placeholder="superSecretP@s$w0rd"
           variant="underlined"
-          :class="passwordValidator? '' : 'shake'"
+          :class="passwordValidator ? '' : 'shake'"
           required
           :rules="passwordRules"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
@@ -163,11 +152,7 @@ async function loginWithGoogle() {
       </v-col>
     </v-row>
     <v-row>
-      <v-col 
-        cols="12"
-        sm="6"
-        class="d-flex justify-start"
-      >
+      <v-col cols="12" sm="6" class="d-flex justify-start">
         <v-btn
           color="primary"
           block
@@ -178,10 +163,7 @@ async function loginWithGoogle() {
           Login
         </v-btn>
       </v-col>
-      <v-col
-        cols="12"
-        sm="6"
-      >
+      <v-col cols="12" sm="6">
         <v-btn
           fab
           color="primary"
@@ -195,27 +177,18 @@ async function loginWithGoogle() {
             src="/google-icon.png"
             style="height: 28px"
             alt="G google symbol"
-          /> 
-          <span class="pl-2">
-            Continue with Google
-          </span>
+          />
+          <span class="pl-2"> Continue with Google </span>
         </v-btn>
       </v-col>
     </v-row>
     <v-row>
       <v-col class="d-flex flex-row justify-center">
         <span class="pr-2">Don't have an account?</span>
-        <v-dialog
-          v-model="showRegisterModal"
-          persistent
-          width="683"
-        >
-          <template v-slot:activator>
-            <span 
-              style="
-                color: rgba(var(--v-theme-primary));
-                cursor: pointer;
-              "
+        <v-dialog v-model="showRegisterModal" persistent width="683">
+          <template #activator>
+            <span
+              style="color: rgba(var(--v-theme-primary)); cursor: pointer"
               class="text-right"
               @click="showRegisterModal = true"
             >
@@ -229,6 +202,4 @@ async function loginWithGoogle() {
   </v-form>
 </template>
 
-<style lang="scss" scoped>
-  
-</style>
+<style lang="scss" scoped></style>

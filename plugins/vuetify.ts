@@ -1,8 +1,8 @@
-import { createVuetify, ThemeDefinition  } from 'vuetify'
+import { createVuetify, ThemeDefinition } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-const DarkTheme: ThemeDefinition  = {
+const DarkTheme: ThemeDefinition = {
   dark: true,
   colors: {
     background: '#0A2647',
@@ -15,11 +15,10 @@ const DarkTheme: ThemeDefinition  = {
     info: '#26A69A',
     success: '#00E676',
     warning: '#FFC107',
-
-  }
+  },
 }
 
-const LightTheme: ThemeDefinition  = {
+const LightTheme: ThemeDefinition = {
   dark: false,
   colors: {
     background: '#F7FBFC',
@@ -32,45 +31,43 @@ const LightTheme: ThemeDefinition  = {
     info: '#26A69A',
     success: '#00E676',
     warning: '#FFC107',
-    
-  }
+  },
 }
 
-export default defineNuxtPlugin(nuxtApp => {
+export default defineNuxtPlugin((nuxtApp) => {
   let actualTheme: string
   const themeCookie = useCookie('theme')
   if (themeCookie.value === undefined || themeCookie.value === null) {
     actualTheme = 'LightTheme'
-  }
-  else {
+  } else {
     actualTheme = themeCookie.value
   }
-  
+
   const vuetify = createVuetify({
     defaults: {
       VCard: {
         VCardText: {
-          style: 'padding: 16px'
+          style: 'padding: 16px',
         },
         VCardTitle: {
-          style: 'padding: 16px'
+          style: 'padding: 16px',
         },
         VCardActions: {
-          style: 'padding: 16px'
-        }
+          style: 'padding: 16px',
+        },
       },
       VValidation: {
         style: `
           color: #234234;
-        `
-      }
+        `,
+      },
     },
     theme: {
       defaultTheme: actualTheme,
       themes: {
         DarkTheme,
-        LightTheme
-      }
+        LightTheme,
+      },
     },
     ssr: true,
     components,

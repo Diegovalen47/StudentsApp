@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import { useTheme } from 'vuetify'
 
 const theme = useTheme()
@@ -24,33 +23,23 @@ function toggleTheme() {
     themeCookie.value = 'DarkTheme'
   }
 }
-
 </script>
 
 <template>
   <div
-    class="
-      d-flex flex-row align-center justify-space-between 
-      switch-background
-    "
+    class="d-flex flex-row align-center justify-space-between switch-background"
     @click="toggleTheme()"
   >
-    <div 
-      class="
-        d-flex align-center justify-center 
-        circle
-      " 
-      :class="{ 
-        'dark': isDarkMode 
+    <div
+      class="d-flex align-center justify-center circle"
+      :class="{
+        dark: isDarkMode,
       }"
     >
-      <v-icon 
-        class="icon" 
-        color="primary" 
-        :icon="isDarkMode 
-          ? 'mdi-moon-waxing-crescent' 
-          : 'mdi-weather-sunny'
-        " 
+      <v-icon
+        class="icon"
+        color="primary"
+        :icon="isDarkMode ? 'mdi-moon-waxing-crescent' : 'mdi-weather-sunny'"
       />
     </div>
     <div class="switch-placeholder"></div>
@@ -59,7 +48,6 @@ function toggleTheme() {
 </template>
 
 <style lang="scss" scoped>
-
 $switch-height: 32px;
 $icon-size: 24px;
 
@@ -92,7 +80,7 @@ $icon-size: 24px;
   border-radius: 50%;
   background-color: rgba(var(--v-theme-surface));
   transition: all 0.3s ease-in-out;
-  
+
   &.dark {
     left: calc(100% - $switch-height);
   }

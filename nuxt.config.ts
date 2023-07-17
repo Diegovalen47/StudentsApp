@@ -1,33 +1,29 @@
-
 export default defineNuxtConfig({
-  devtools: { 
-    enabled: true 
+  devtools: {
+    enabled: true,
   },
   vite: {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@use "@/assets/css/colors.scss" as *;'
-        }
-      }
-    }
+          additionalData: '@use "@/assets/css/colors.scss" as *;',
+        },
+      },
+    },
   },
-  modules: [
-    '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt',
-  ],
+  modules: ['@pinia/nuxt', '@pinia-plugin-persistedstate/nuxt'],
   runtimeConfig: {
     public: {
-      baseURL: process.env.BASE_URL
+      baseURL: process.env.BASE_URL,
     },
     private: {
-      serverBaseURL: process.env.SERVER_BASE_URL
-    }
+      serverBaseURL: process.env.SERVER_BASE_URL,
+    },
   },
   css: [
     '@/assets/css/global.scss',
     'vuetify/lib/styles/main.sass',
-    '@mdi/font/css/materialdesignicons.min.css'
+    '@mdi/font/css/materialdesignicons.min.css',
   ],
   build: {
     transpile: ['vuetify'],

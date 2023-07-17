@@ -5,12 +5,11 @@ import { getStudentById } from '@/server/controllers/student'
 const SECRET = process.env.AUTH_SECRET as string
 
 export default defineEventHandler(async (event) => {
-
   const cookieHeaderValue = getRequestHeader(event, 'Cookie')
   const array = cookieHeaderValue?.split(';')
-  const accessToken = array?.find(
-    (element) => element.includes('access_token')
-  )?.split('=')[1]
+  const accessToken = array
+    ?.find((element) => element.includes('access_token'))
+    ?.split('=')[1]
 
   if (accessToken === undefined) {
     return createError({
@@ -25,7 +24,7 @@ export default defineEventHandler(async (event) => {
     const studentId = decodedAccessToken.studentId
     const student = await getStudentById(studentId)
     return {
-      student: student,
+      student,
     }
   } catch (error) {
     return createError({

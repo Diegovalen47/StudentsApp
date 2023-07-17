@@ -1,41 +1,35 @@
-import { createStudent } from '@/server/controllers/student'
 import { Prisma } from '@prisma/client'
+import { createStudent } from '@/server/controllers/student'
 import { validValue } from '@/utils/fieldsValidation'
 import { Student, encryptPassword } from '@/models/Student'
 
 export default defineEventHandler(async (event) => {
   try {
-    const { 
-      userName, 
-      name, 
-      lastName, 
-      email, 
-      password 
-    } = await readBody(event)
-    if(name === undefined) {
+    const { userName, name, lastName, email, password } = await readBody(event)
+    if (name === undefined) {
       return {
         error: true,
         message: 'name is required',
-        student: null
+        student: null,
       }
     }
-    if(email === undefined) {
+    if (email === undefined) {
       return {
         error: true,
         message: 'email is required',
-        student: null
+        student: null,
       }
     }
     let hashedPassword
-    if(password !== undefined || password !== null || password !== '') {
+    if (password !== undefined || password !== null || password !== '') {
       hashedPassword = encryptPassword(password)
     } else {
       hashedPassword = password
     }
     const student: Student = {
       studentId: -1,
-      name: name,
-      email: email,
+      name,
+      email,
       userName: validValue(userName),
       lastName: validValue(lastName),
       password: validValue(hashedPassword),
@@ -45,7 +39,7 @@ export default defineEventHandler(async (event) => {
     return {
       message: 'Student created',
       student: newStudent,
-      error: false
+      error: false,
     }
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -53,11 +47,11 @@ export default defineEventHandler(async (event) => {
         return {
           error: true,
           message: `${error.code}: Student already exists`,
-          student: null
+          student: null,
         }
       }
     }
-    
+
     throw createError({
       statusCode: 500,
       statusMessage: 'Internal Server Error',

@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 
 export const useStudentsStore = defineStore('student', {
-  state: () => { 
+  state: () => {
     return {
       isLoggedIn: false,
-      student: null, 
+      student: null,
     }
   },
   persist: true,

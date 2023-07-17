@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import { useAccountsStore } from '@/store/accounts'
 import useFormValidator from '@/composables/useFormValidator'
 import useInputRules from '@/composables/useInputRules'
@@ -23,21 +22,21 @@ const userNameRules = ref<Array<any>>([
   inputRules.noStartWithSpaces,
   inputRules.noOnlySpaces,
   inputRules.noSpaces,
-  inputRules.noEndWithSpaces
+  inputRules.noEndWithSpaces,
 ])
 const nameRules = ref<Array<any>>([
   inputRules.fieldRequired,
   inputRules.noStartWithSpaces,
   inputRules.noOnlySpaces,
   inputRules.nameValid,
-  inputRules.noEndWithSpaces
+  inputRules.noEndWithSpaces,
 ])
 const emailRules = ref<Array<any>>([
   inputRules.fieldRequired,
   inputRules.noStartWithSpaces,
   inputRules.noOnlySpaces,
   inputRules.emailValid,
-  inputRules.noEndWithSpaces
+  inputRules.noEndWithSpaces,
 ])
 const passwordRules = ref<Array<any>>([
   inputRules.fieldRequired,
@@ -45,7 +44,7 @@ const passwordRules = ref<Array<any>>([
   inputRules.noOnlySpaces,
   inputRules.passwordMinLength,
   inputRules.securePassword,
-  inputRules.noEndWithSpaces
+  inputRules.noEndWithSpaces,
 ])
 
 const userNameComponent = ref()
@@ -61,36 +60,36 @@ const passwordValidator = ref<boolean>(true)
 const termsComponent = ref()
 const termsValidator = ref<boolean>(true)
 const RegisterValidator = useFormValidator([
-  { 
-    component: userNameComponent, 
-    validator: userNameValidator
+  {
+    component: userNameComponent,
+    validator: userNameValidator,
   },
-  { 
-    component: nameComponent, 
-    validator: nameValidator
+  {
+    component: nameComponent,
+    validator: nameValidator,
   },
-  { 
-    component: lastNameComponent, 
-    validator: lastNameValidator
+  {
+    component: lastNameComponent,
+    validator: lastNameValidator,
   },
-  { 
-    component: emailComponent, 
-    validator: emailValidator
+  {
+    component: emailComponent,
+    validator: emailValidator,
   },
-  { 
+  {
     component: passwordComponent,
-    validator: passwordValidator 
+    validator: passwordValidator,
   },
-  { 
+  {
     component: termsComponent,
-    validator: termsValidator 
-  }
+    validator: termsValidator,
+  },
 ])
-const GoogleRegisterValidator  = useFormValidator([
-  { 
+const GoogleRegisterValidator = useFormValidator([
+  {
     component: termsComponent,
-    validator: termsValidator 
-  }
+    validator: termsValidator,
+  },
 ])
 
 const showRegisterModal = computed({
@@ -99,19 +98,16 @@ const showRegisterModal = computed({
   },
   set(newValue) {
     accountsStore.showRegisterModal = newValue
-  }
+  },
 })
 
 async function signUp() {
   const isValid = await RegisterValidator.validateForm()
   if (isValid) {
-    const { data } = await useFetch(
-      '/api/students', 
-      {
-        method: 'POST',
-        body: JSON.stringify(formData.value)
-      }
-    )
+    const { data } = await useFetch('/api/students', {
+      method: 'POST',
+      body: JSON.stringify(formData.value),
+    })
     const dataObject: any = toRaw(data.value)
     if (dataObject.error === false) {
       showRegisterModal.value = false
@@ -142,7 +138,6 @@ async function signUpWithGoogle() {
     console.log('Form is not valid Google')
   }
 }
-
 </script>
 
 <template>
@@ -150,10 +145,7 @@ async function signUpWithGoogle() {
     <v-card-title class="d-flex justify-space-between">
       <h2>Sign Up</h2>
       <div>
-        <v-icon
-          color="primary"
-          @click="showRegisterModal = false"
-        >
+        <v-icon color="primary" @click="showRegisterModal = false">
           mdi-close
         </v-icon>
       </div>
@@ -169,17 +161,13 @@ async function signUpWithGoogle() {
               label="Enter your user name"
               placeholder="jhon34_Doe"
               variant="underlined"
-              :class="userNameValidator? '' : 'shake'"
+              :class="userNameValidator ? '' : 'shake'"
               :rules="userNameRules"
             ></v-text-field>
           </v-col>
         </v-row>
         <v-row>
-          <v-col 
-            class="pb-0 d-flex flex-column"
-            cols="12"
-            md="6"
-          >
+          <v-col class="pb-0 d-flex flex-column" cols="12" md="6">
             <h3>Name</h3>
             <v-text-field
               ref="nameComponent"
@@ -187,15 +175,11 @@ async function signUpWithGoogle() {
               label="Enter your name"
               placeholder="Jhon"
               variant="underlined"
-              :class="nameValidator? '' : 'shake'"
+              :class="nameValidator ? '' : 'shake'"
               :rules="nameRules"
             ></v-text-field>
           </v-col>
-          <v-col 
-            class="pb-0 d-flex flex-column"
-            cols="12"
-            md="6"
-          >
+          <v-col class="pb-0 d-flex flex-column" cols="12" md="6">
             <h3>Last Name</h3>
             <v-text-field
               ref="lastNameComponent"
@@ -203,7 +187,7 @@ async function signUpWithGoogle() {
               label="Enter your last name"
               placeholder="Doe"
               variant="underlined"
-              :class="lastNameValidator? '' : 'shake'"
+              :class="lastNameValidator ? '' : 'shake'"
               :rules="nameRules"
             ></v-text-field>
           </v-col>
@@ -217,7 +201,7 @@ async function signUpWithGoogle() {
               label="Enter your email"
               placeholder="jonhdoe@mail.com"
               variant="underlined"
-              :class="emailValidator? '' : 'shake'"
+              :class="emailValidator ? '' : 'shake'"
               :rules="emailRules"
             ></v-text-field>
           </v-col>
@@ -231,7 +215,7 @@ async function signUpWithGoogle() {
               label="Enter your password"
               placeholder="superSecretP@s$w0rd"
               variant="underlined"
-              :class="passwordValidator? '' : 'shake'"
+              :class="passwordValidator ? '' : 'shake'"
               :rules="passwordRules"
               :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
               :type="showPassword ? 'text' : 'password'"
@@ -242,28 +226,23 @@ async function signUpWithGoogle() {
       </v-form>
       <v-form ref="termsComponent">
         <v-row>
-          <v-col
-            id="terms-checkbox"
-            class="pa-0"
-          >
-            <v-checkbox 
+          <v-col id="terms-checkbox" class="pa-0">
+            <v-checkbox
               v-model="acceptedTerms"
               color="primary"
               :rules="nameRules"
-              :class="termsValidator || acceptedTerms? '' : 'shake'"
-              :style="!termsValidator && !acceptedTerms
-                ? 'color: rgba(var(--v-theme-error));' 
-                : ''
+              :class="termsValidator || acceptedTerms ? '' : 'shake'"
+              :style="
+                !termsValidator && !acceptedTerms
+                  ? 'color: rgba(var(--v-theme-error));'
+                  : ''
               "
             >
-              <template v-slot:label>
+              <template #label>
                 <div>
                   I agree that
-                  <v-tooltip 
-                    location="bottom"
-                    offset="3"
-                  >
-                    <template v-slot:activator="{ props }">
+                  <v-tooltip location="bottom" offset="3">
+                    <template #activator="{ props }">
                       <a
                         target="_blank"
                         href="https://vuetifyjs.com"
@@ -271,7 +250,7 @@ async function signUpWithGoogle() {
                         style="
                           color: rgba(var(--v-theme-primary));
                           text-decoration: none;
-                        " 
+                        "
                         @click.stop
                       >
                         Vuetify
@@ -289,26 +268,12 @@ async function signUpWithGoogle() {
     </v-card-text>
     <v-card-actions>
       <v-row>
-        <v-col 
-          class="d-flex justify-start"
-          cols="12"
-          sm="6"
-        >
-          <v-btn
-            color="primary"
-            block
-            variant="flat"
-            rounded
-            @click="signUp()"
-          >
+        <v-col cols="12" class="d-flex justify-start" sm="6">
+          <v-btn color="primary" block variant="flat" rounded @click="signUp()">
             Sign Up
           </v-btn>
         </v-col>
-        <v-col 
-          class="d-flex justify-start"
-          cols="12"
-          sm="6"
-        >
+        <v-col class="d-flex justify-start" cols="12" sm="6">
           <v-btn
             fab
             color="primary"
@@ -322,10 +287,8 @@ async function signUpWithGoogle() {
               src="/google-icon.png"
               style="height: 28px"
               alt="G google symbol"
-            /> 
-            <span class="pl-2">
-              Sign Up with Google
-            </span>
+            />
+            <span class="pl-2"> Sign Up with Google </span>
           </v-btn>
         </v-col>
       </v-row>

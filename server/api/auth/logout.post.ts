@@ -1,13 +1,12 @@
 import { serialize } from 'cookie'
 
-export default defineEventHandler(async (event) => {
-
+export default defineEventHandler((event) => {
   const serializedAccessToken = serialize('access_token', '', {
     httpOnly: true,
     secure: false,
     sameSite: 'strict',
     maxAge: 0,
-    path: '/'
+    path: '/',
   })
 
   const serializedAccessExpTimestamp = serialize('access_exp_timestamp', '', {
@@ -15,7 +14,7 @@ export default defineEventHandler(async (event) => {
     secure: false,
     sameSite: 'strict',
     maxAge: 0,
-    path: '/'
+    path: '/',
   })
 
   const serializedRefreshToken = serialize('refresh_token', '', {
@@ -23,7 +22,7 @@ export default defineEventHandler(async (event) => {
     secure: false,
     sameSite: 'strict',
     maxAge: 0,
-    path: '/'
+    path: '/',
   })
 
   const serializedRefreshExpTimestamp = serialize('refresh_exp_timestamp', '', {
@@ -31,20 +30,19 @@ export default defineEventHandler(async (event) => {
     secure: false,
     sameSite: 'strict',
     maxAge: 0,
-    path: '/'
+    path: '/',
   })
 
-  const record: Record<string, string[]> = { 
-    'Set-Cookie' : [
-      serializedAccessToken, 
+  const record: Record<string, string[]> = {
+    'Set-Cookie': [
+      serializedAccessToken,
       serializedRefreshToken,
       serializedAccessExpTimestamp,
-      serializedRefreshExpTimestamp
-    ] 
+      serializedRefreshExpTimestamp,
+    ],
   }
 
   setHeaders(event, record)
-
 
   return {
     message: 'Logout successful',
