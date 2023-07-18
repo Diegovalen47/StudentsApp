@@ -1,10 +1,10 @@
 import Swal from 'sweetalert2'
 
 export function useSwal() {
-  // update default options
   const Alert = Swal.mixin({
-    allowOutsideClick: false,
-    reverseButtons: true,
+    confirmButtonColor: '#0A2647',
+    denyButtonColor: '#2C74B3',
+    backdrop: 'rgba(0, 78, 255, 0.2)',
   })
 
   return {

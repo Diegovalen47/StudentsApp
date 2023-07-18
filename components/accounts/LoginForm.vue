@@ -58,15 +58,7 @@ async function loginWithCredentials() {
   const isValid = await validateForm()
   if (isValid) {
     try {
-      const response = await axios.post('/api/auth/login', formData.value)
-      Alert.fire({
-        title: 'Success',
-        toast: true,
-        position: 'top-end',
-        text: `${response.data.student.name} logged in successfully`,
-        icon: 'success',
-        confirmButtonText: 'Cool',
-      })
+      await axios.post('/api/auth/login', formData.value)
       navigateTo('/dashboard')
     } catch (error) {
       Alert.fire({

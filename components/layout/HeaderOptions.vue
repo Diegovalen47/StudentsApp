@@ -20,16 +20,16 @@ const drawer = computed({
 
 async function handleSignOut() {
   try {
-    await axios.post('/api/auth/logout')
-    Alert.fire({
-      title: 'Success',
-      toast: true,
-      position: 'top-end',
-      text: 'Logged out successfully',
-      icon: 'success',
-      confirmButtonText: 'Cool',
+    const { isConfirmed } = await Alert.fire({
+      title: 'Do you want to logout?',
+      showDenyButton: true,
+      confirmButtonText: 'Yes',
+      denyButtonText: 'No',
     })
-    navigateTo('/')
+    if (isConfirmed) {
+      await axios.post('/api/auth/logout')
+      navigateTo('/')
+    }
   } catch (error) {
     Alert.fire({
       title: (error as any).response.data.statusMessage,
